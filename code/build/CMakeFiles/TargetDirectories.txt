@@ -1,0 +1,4 @@
+/Users/a2141/al-sapsan-git/stepik-c/code/build/CMakeFiles/C_projects_debug.dir
+/Users/a2141/al-sapsan-git/stepik-c/code/build/CMakeFiles/C_projects_release.dir
+/Users/a2141/al-sapsan-git/stepik-c/code/build/CMakeFiles/edit_cache.dir
+/Users/a2141/al-sapsan-git/stepik-c/code/build/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,14 @@
+[
+{
+  "directory": "/Users/a2141/al-sapsan-git/stepik-c/code/build",
+  "command": "/usr/bin/clang -DDEBUG  -g -std=gnu11 -g -o CMakeFiles/C_projects_debug.dir/test.c.o -c /Users/a2141/Documents/C_projects/test.c",
+  "file": "/Users/a2141/Documents/C_projects/test.c",
+  "output": "CMakeFiles/C_projects_debug.dir/test.c.o"
+},
+{
+  "directory": "/Users/a2141/al-sapsan-git/stepik-c/code/build",
+  "command": "/usr/bin/clang -DNDEBUG  -g -std=gnu11 -O2 -o CMakeFiles/C_projects_release.dir/test.c.o -c /Users/a2141/Documents/C_projects/test.c",
+  "file": "/Users/a2141/Documents/C_projects/test.c",
+  "output": "CMakeFiles/C_projects_release.dir/test.c.o"
+}
+]

@@ -1,0 +1,1 @@
+/usr/bin/clang -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/C_projects_debug.dir/test.c.o -o _debug
