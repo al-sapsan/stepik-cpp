@@ -1,29 +1,27 @@
-cmake_minimum_required(VERSION 3.10)
-project(C_projects C)
-
-# Установка стандартов и опций
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_STANDARD_REQUIRED ON)
-
-# Исходный файл
-set(SOURCE_FILE test.c)  # <-- Измени на своё имя файла
-
-# Debug target
-add_executable(${PROJECT_NAME}_debug ${SOURCE_FILE})
-set_target_properties(${PROJECT_NAME}_debug PROPERTIES
-    RUNTIME_OUTPUT_NAME "${SOURCE_FILE_NAME}_debug"
+cmake_minimum_required(VERSION 3.18)
+project(
+    StepikCpp
+    VERSION 0.0.1
+    DESCRIPTION "Cpp study by Stepik"
+    LANGUAGES CXX
 )
-target_compile_definitions(${PROJECT_NAME}_debug PRIVATE DEBUG)
-target_compile_options(${PROJECT_NAME}_debug PRIVATE -g)
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_CXX_CMAKE_C_STANDARD_REQUIRED ON)
 
-# Release target
-add_executable(${PROJECT_NAME}_release ${SOURCE_FILE})
-set_target_properties(${PROJECT_NAME}_release PROPERTIES
-    RUNTIME_OUTPUT_NAME "${SOURCE_FILE_NAME}_release"
+set(CMAKE_BUILD_TYPE Debug)
+
+add_executable(matrix_class)
+
+set(sources
+    src/main.cpp
+    src/matrix.h
+    src/matrix.cpp
 )
-target_compile_definitions(${PROJECT_NAME}_release PRIVATE NDEBUG)
-target_compile_options(${PROJECT_NAME}_release PRIVATE -O2)
 
-# Расчёт имени файла без расширения
-get_filename_component(SOURCE_FILE_NAME ${SOURCE_FILE} NAME_WE)
+target_sources(matrix_class PRIVATE ${sources})
 
+target_include_directories(matrix_class
+    PUBLIC
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
+        "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
+)
