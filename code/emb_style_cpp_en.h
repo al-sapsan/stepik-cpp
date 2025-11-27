@@ -63,29 +63,31 @@ extern "C"
 
     // 5. Function prototypes with Doxygen comments
     /* Example:
-       /********** Function Prototypes **********/
-    *@brief Initialize PID controller
-            *@param pid Pointer to the
-            structure(must be valid) *
-        @param kp Proportional coefficient[0.0 - 5.0] * @ return HAL_StatusTypeDef Initialization status HAL_StatusTypeDef pid_init(pid_controller_t * pid, float kp);
+       /********** Function Prototypes ********** /
+    * @brief Initialize PID controller
+    * @param pid Pointer to the structure(must be valid)
+    * @param kp Proportional coefficient[0.0 - 5.0]
+    * @ return HAL_StatusTypeDef Initialization status**/
+    HAL_StatusTypeDef
+    pid_init(pid_controller_t *pid, float kp);
 
     // 6. Main function
     /* Example:
-        /********** Main Function **********/
-    *@brief Точка входа в программу *
-            *@ return Код завершения(0 — успешно, 1 — ошибка памяти)
-
-                int
-                main(void){
-                    ...}
-
-        // 7. Function implementations
-        * Example :
-        /********** Function Implementation **********/
-        void funct()
-    {
+        /********** Main Function ********** /
+    * @brief Точка входа в программу *
+    * @ return Код завершения(0 — успешно, 1 — ошибка памяти)
+    **/
+    int main(void) {
         ...
-    }
+    };
+
+    // 7. Function implementations
+    *Example :
+        /********** Function Implementation **********/
+        void
+        funct() {
+            ...
+        };
     // 8. Section headers use the following notation:
     /* Example common section headers:
        /********** Header Text **********/
@@ -199,16 +201,16 @@ extern "C"
      *  full names -> other cases
      */
     // Example:
-    for (u8_t i_u8 = 0; i_u8 < 10; i_u8++)
+    for (size_t i = 0; i < 10; i++)
     { // Standard loop index
-        arr_waypoints_f32[i_u8] = 0.0f;
+        arr_waypoints_f32[i] = 0.0f;
     }
 
-    for (u8_t row_u8 = 0; row_u8 < 4; row_u8++)
+    for (size_t row = 0; row < 4; row++)
     { // Multi-Dimensional Loops
-        for (u8_t col_u8 = 0; col_u8 < 4; col_u8++)
+        for (size_t col = 0; col < 4; col++)
         {
-            matrix[row_u8][col_u8] = 0;
+            matrix[row][col] = 0;
         }
     }
 
