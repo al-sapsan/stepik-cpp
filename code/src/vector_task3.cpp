@@ -12,6 +12,7 @@
 /********** Core **********/
 #include <cstdint>
 #include <cstdio>
+#include <vector>
 #include <unordered_map>
 
 /********** Main Function **********/
@@ -36,19 +37,34 @@ int main(void)
 
     const size_t n_sz = static_cast<size_t>(n_i32);
 
+    // Используем vector для хранения входных данных
+    std::vector<int32_t> nums;
+    nums.resize(n_sz);
+
+    // Считываем все элементы в vector
+    for (size_t i = 0; i != n_sz; ++i)
+    {
+        if (std::scanf("%d", &nums[i]) != 1)
+        {
+            return 0;
+        }
+    }
+
+    // Подсчитываем частоты элементов
     std::unordered_map<int32_t, size_t> counts_map;
     counts_map.reserve(n_sz);
 
     long long ans_i64 = 0;
 
+    // Обрабатываем все элементы из vector
     for (size_t i = 0; i != n_sz; ++i)
     {
-        int32_t val_i32 = 0;
-        std::scanf("%d", &val_i32);
+        const int32_t val_i32 = nums[i];
 
         auto it = counts_map.find(val_i32);
         if (it != counts_map.end())
         {
+            // Количество новых пар = текущее количество вхождений этого значения
             ans_i64 += static_cast<long long>(it->second);
             ++(it->second);
         }

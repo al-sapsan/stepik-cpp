@@ -40,18 +40,25 @@ int main(void)
 
     for (size_t i = 0; i != n_sz; ++i)
     {
-        std::scanf("%d", &arr_i32[i]);
+        if (std::scanf("%d", &arr_i32[i]) != 1)
+        {
+            return 0;
+        }
     }
 
-    size_t write_idx = 0;
+    // Two-pointer technique with while loop
+    size_t write_idx = 1; // First element is always unique
+    size_t read_idx = 1;  // Start from second element
 
-    for (size_t i = 0; i != n_sz; ++i)
+    while (read_idx != n_sz)
     {
-        if (write_idx == 0 || arr_i32[i] != arr_i32[write_idx - 1])
+        // If current element is different from previous unique element
+        if (arr_i32[read_idx] != arr_i32[write_idx - 1])
         {
-            arr_i32[write_idx] = arr_i32[i];
+            arr_i32[write_idx] = arr_i32[read_idx];
             ++write_idx;
         }
+        ++read_idx;
     }
 
     std::printf("%zu\n", write_idx);

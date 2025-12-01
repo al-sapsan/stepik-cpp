@@ -24,19 +24,29 @@
 int main(void)
 {
     int32_t n_i32 = 0;
-    if (std::scanf("%d", &n_i32) != 1)
+    if (std::scanf("%d", &n_i32) != 1 || n_i32 < 0)
     {
         return 0;
     }
 
-    const size_t count = static_cast<size_t>(n_i32 > 0 ? n_i32 : 0);
+    const size_t count = static_cast<size_t>(n_i32);
+
+    // Handle empty array case
+    if (count == 0)
+    {
+        std::printf("0\n");
+        return 0;
+    }
 
     std::vector<int32_t> nums_i32;
     nums_i32.resize(count);
 
     for (size_t i = 0; i != count; ++i)
     {
-        std::scanf("%d", &nums_i32[i]);
+        if (std::scanf("%d", &nums_i32[i]) != 1)
+        {
+            return 0;
+        }
     }
 
     int32_t target_i32 = 0;
@@ -45,24 +55,27 @@ int main(void)
         return 0;
     }
 
-    /* binary search for lower_bound */
-    size_t left = 0;
-    size_t right = count;
-    while (left != right)
+    // Binary search for lower bound (first position where element >= target)
+    size_t low = 0;
+    size_t high = count;
+
+    while (low != high)
     {
-        size_t mid = left + ((right - left) >> 1);
+        // Prevent overflow and use bit shift for division by 2
+        size_t mid = low + ((high - low) >> 1);
+
         if (nums_i32[mid] < target_i32)
         {
-            left = mid + 1;
+            low = mid + 1;
         }
         else
         {
-            right = mid;
+            high = mid;
         }
     }
 
-    /* left is the insertion position; if element equal, it's found */
-    std::printf("%zu\n", left);
+    // 'low' is the insertion position (also the found index if element exists)
+    std::printf("%zu\n", low);
 
     return 0;
 }

@@ -1,209 +1,53 @@
-/************************************************************************
+/**********************************************************************
  * @file script2.cpp
- * @brief Двусвязный список: Object, LinkedList и исключение
- * @version 1.0
- * @date 2025-10-17
- ************************************************************************/
+ * @brief Решение: поэлементная сумма двух векторов, заполненных 0..n-1 и 0..m-1.
+ *
+ * @details Программа читает два целых числа `n` и `m` (гарантируется n == m),
+ * затем выводит поэлементную сумму двух векторов. Для экономии памяти
+ * элементы вычисляются на лету (без дополнительного выделения массивов).
+ *
+ * @date 2025-11-27
+ * @copyright Copyright (c) 2025
+ **********************************************************************/
 
-#include <memory>
-#include <exception>
-#include <string>
+/********** Core **********/
+#include <cstdint>
+#include <cstdio>
 
+/********** Main Function **********/
 /**
- * @brief Исключение для некорректного индекса списка
+ * @brief Точка входа программы.
+ * @return 0 при успешном завершении
  */
-class LinkedListIndexError : public std::exception
+int main(void)
 {
-public:
-    const char *what() const noexcept override
+    int32_t n_i32 = 0;
+    int32_t m_i32 = 0;
+
+    if (std::scanf("%d %d", &n_i32, &m_i32) != 2)
     {
-        return "Invalid element index.";
-    }
-};
-
-/**
- * @brief Узел двусвязного списка
- * @tparam T Тип данных в узле
- */
-template <typename T>
-class Object
-{
-private:
-    T data{};
-    std::shared_ptr<Object<T>> next{nullptr};
-    std::shared_ptr<Object<T>> prev{nullptr};
-
-public:
-    explicit Object(const T &d) : data(d) {}
-
-    T &get_data() { return data; }
-    const T &get_data() const { return data; }
-
-    std::shared_ptr<Object<T>> get_next() const { return next; }
-    std::shared_ptr<Object<T>> get_prev() const { return prev; }
-
-    void set_next(const std::shared_ptr<Object<T>> &n) { next = n; }
-    void set_prev(const std::shared_ptr<Object<T>> &p) { prev = p; }
-};
-
-/**
- * @brief Двусвязный список с операциями вставки/удаления и доступом по индексу
- * @tparam T Тип данных в списке
- */
-template <typename T>
-class LinkedList
-{
-private:
-    std::shared_ptr<Object<T>> head{nullptr};
-    std::shared_ptr<Object<T>> tail{nullptr};
-    size_t length{0};
-
-    void check_index(int idx) const
-    {
-        if (idx < 0 || static_cast<size_t>(idx) >= length)
-            throw LinkedListIndexError();
+        return 0;
     }
 
-public:
-    LinkedList() = default;
-    ~LinkedList() = default;
-
-    std::shared_ptr<Object<T>> get_head() const { return head; }
-    std::shared_ptr<Object<T>> get_tail() const { return tail; }
-
-    void push_back(const T &value)
+    if (n_i32 <= 0)
     {
-        auto node = std::make_shared<Object<T>>(value);
-        if (!head)
-        {
-            head = tail = node;
-        }
-        else
-        {
-            node->set_prev(tail);
-            tail->set_next(node);
-            tail = node;
-        }
-        ++length;
+        std::putchar('\n');
+        return 0;
     }
 
-    void push_front(const T &value)
-    {
-        auto node = std::make_shared<Object<T>>(value);
-        if (!head)
+    size_t count = static_cast<size_t>(n_i32);
+
+    for (size_t i = 0; i < count; ++i)
+    { // Standard loop index
+        int32_t sum_i32 = static_cast<int32_t>(i * 2);
+        std::printf("%d", sum_i32);
+        if (i + 1 < count)
         {
-            head = tail = node;
+            std::putchar(' ');
         }
-        else
-        {
-            node->set_next(head);
-            head->set_prev(node);
-            head = node;
-        }
-        ++length;
     }
 
-    void pop_back()
-    {
-        if (!tail)
-            return;
-        if (head == tail)
-        {
-            head.reset();
-            tail.reset();
-        }
-        else
-        {
-            tail = tail->get_prev();
-            tail->set_next(nullptr);
-        }
-        --length;
-    }
+    std::putchar('\n');
 
-    void pop_front()
-    {
-        if (!head)
-            return;
-        if (head == tail)
-        {
-            head.reset();
-            tail.reset();
-        }
-        else
-        {
-            head = head->get_next();
-            head->set_prev(nullptr);
-        }
-        --length;
-    }
-
-    void insert(int idx, const T &value)
-    {
-        if (idx < 0 || static_cast<size_t>(idx) > length)
-            throw LinkedListIndexError();
-
-        if (idx == 0)
-        {
-            push_front(value);
-            return;
-        }
-        if (static_cast<size_t>(idx) == length)
-        {
-            push_back(value);
-            return;
-        }
-
-        auto node = std::make_shared<Object<T>>(value);
-        auto cur = head;
-        for (int i = 0; i < idx; ++i)
-            cur = cur->get_next();
-
-        node->set_prev(cur->get_prev());
-        node->set_next(cur);
-        cur->get_prev()->set_next(node);
-        cur->set_prev(node);
-        ++length;
-    }
-
-    void remove(int idx)
-    {
-        check_index(idx);
-
-        if (idx == 0)
-        {
-            pop_front();
-            return;
-        }
-        if (static_cast<size_t>(idx) == length - 1)
-        {
-            pop_back();
-            return;
-        }
-
-        auto cur = head;
-        for (int i = 0; i < idx; ++i)
-            cur = cur->get_next();
-
-        cur->get_prev()->set_next(cur->get_next());
-        cur->get_next()->set_prev(cur->get_prev());
-        --length;
-    }
-
-    T &operator[](int idx)
-    {
-        check_index(idx);
-        auto cur = head;
-        for (int i = 0; i < idx; ++i)
-            cur = cur->get_next();
-        return cur->get_data();
-    }
-
-    const T &operator[](int idx) const
-    {
-        check_index(idx);
-        auto cur = head;
-        for (int i = 0; i < idx; ++i)
-            cur = cur->get_next();
-        return cur->get_data();
-    }
-};
+    return 0;
+}

@@ -40,20 +40,37 @@ int main(void)
     std::vector<int32_t> nums_i32;
     nums_i32.resize(count);
 
+    // Read with error checking
     for (size_t i = 0; i != count; ++i)
     {
-        std::scanf("%d", &nums_i32[i]);
+        if (std::scanf("%d", &nums_i32[i]) != 1)
+        {
+            return 0;
+        }
     }
 
     std::vector<int32_t> ans_i32;
     ans_i32.resize(count);
 
+    // Process with bounds checking
     for (size_t i = 0; i != count; ++i)
     {
-        int32_t idx_i32 = nums_i32[i];
-        ans_i32[i] = nums_i32[static_cast<size_t>(idx_i32)];
+        const int32_t idx_i32 = nums_i32[i];
+        const size_t idx_sz = static_cast<size_t>(idx_i32);
+
+        // Verify it's a valid permutation index
+        if (idx_i32 >= 0 && idx_sz < count)
+        {
+            ans_i32[i] = nums_i32[idx_sz];
+        }
+        else
+        {
+            // Invalid permutation - use sentinel value
+            ans_i32[i] = -1;
+        }
     }
 
+    // Output results
     for (size_t i = 0; i != count; ++i)
     {
         std::printf("%d ", ans_i32[i]);

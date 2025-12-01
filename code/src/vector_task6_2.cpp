@@ -15,6 +15,15 @@
 #include <cstdio>
 #include <vector>
 
+/********** Function Declaration **********/
+/**
+ * @brief Находит позицию для вставки target в отсортированный массив
+ * @param nums Отсортированный массив уникальных чисел
+ * @param target Искомое число
+ * @return Позиция для вставки или индекс найденного элемента
+ */
+size_t find_insert_position(const std::vector<int32_t> &nums, int32_t target);
+
 /********** Main Function **********/
 /**
  * @brief Точка входа программы.
@@ -31,12 +40,22 @@ int main(void)
 
     const size_t count = static_cast<size_t>(n_i32 > 0 ? n_i32 : 0);
 
+    // Handle empty array case
+    if (count == 0)
+    {
+        std::printf("0\n");
+        return 0;
+    }
+
     std::vector<int32_t> nums_i32;
     nums_i32.resize(count);
 
     for (size_t i = 0; i != count; ++i)
     {
-        std::scanf("%d", &nums_i32[i]);
+        if (std::scanf("%d", &nums_i32[i]) != 1)
+        {
+            return 0;
+        }
     }
 
     int32_t target_i32 = 0;
@@ -45,13 +64,28 @@ int main(void)
         return 0;
     }
 
-    /* binary search for lower_bound */
+    // Call the function and output result
+    size_t position = find_insert_position(nums_i32, target_i32);
+    std::printf("%zu\n", position);
+
+    return 0;
+}
+
+/********** Function Implementation **********/
+size_t find_insert_position(const std::vector<int32_t> &nums, int32_t target)
+{
     size_t left = 0;
-    size_t right = count;
-    while (left != right)
+    size_t right = nums.size();
+
+    while (left < right)
     {
-        size_t mid = left + ((right - left) >> 1);
-        if (nums_i32[mid] < target_i32)
+        size_t mid = left + (right - left) / 2;
+
+        if (nums[mid] == target)
+        {
+            return mid; // Exact match found
+        }
+        else if (nums[mid] < target)
         {
             left = mid + 1;
         }
@@ -61,8 +95,5 @@ int main(void)
         }
     }
 
-    /* left is the insertion position; if element equal, it's found */
-    std::printf("%zu\n", left);
-
-    return 0;
+    return left; // Insertion position
 }

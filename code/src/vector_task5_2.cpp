@@ -35,26 +35,33 @@ int main(void)
     }
 
     const size_t n_sz = static_cast<size_t>(n_i32);
-    std::vector<int32_t> arr_i32;
-    arr_i32.resize(n_sz);
+    std::vector<int32_t> arr_i32(n_sz);
 
     for (size_t i = 0; i != n_sz; ++i)
     {
-        std::scanf("%d", &arr_i32[i]);
+        if (std::scanf("%d", &arr_i32[i]) != 1)
+        {
+            return 0;
+        }
     }
 
     size_t write_idx = 0;
+    size_t i = 0;
 
-    for (size_t i = 0; i != n_sz; ++i)
+    while (i != n_sz)
     {
-        if (write_idx == 0 || arr_i32[i] != arr_i32[write_idx - 1])
+        // Copy unique element
+        arr_i32[write_idx] = arr_i32[i];
+        ++write_idx;
+
+        // Skip all duplicates of current element
+        int32_t current = arr_i32[i];
+        while (i != n_sz && arr_i32[i] == current)
         {
-            arr_i32[write_idx] = arr_i32[i];
-            ++write_idx;
+            ++i;
         }
     }
 
     std::printf("%zu\n", write_idx);
-
     return 0;
 }
