@@ -1,79 +1,84 @@
 /**********************************************************************
- * @file script1.cpp
- * @brief Решение: заполнить два вектора и вывести их поэлементную сумму.
+ * @file script10.cpp
+ * @brief Длина последнего слова в строке.
  *
- * @details Программа читает два целых числа `n` и `m` (гарантируется n == m),
- * заполняет первый вектор числами от 0 до n-1 и второй вектор числами от 0 до m-1,
- * затем вычисляет поэлементную сумму и выводит результат через пробел.
+ * @details Считывает одну строку (включая пробелы) и возвращает длину
+ * последнего слова — максимальной непрерывной последовательности символов
+ * без пробелов. Если слов нет, возвращает 0.
  *
- * @date 2025-11-25
+ * @date 2025-12-01
  * @copyright Copyright (c) 2025
  **********************************************************************/
 
 /********** Core **********/
-#include <cstdint>
 #include <cstdio>
-#include <cstdlib>
 
-/********** Main Function **********/ */
-    /**
-     * @brief Точка входа программы.
-     *
-     * Читает `n` и `m`, заполняет два массива значениями 0..n-1 и 0..m-1,
-     * затем выводит поэлементную сумму.
-     *
-     * @return 0 — успешное завершение
-     */
-    int main(void)
+/********** Main Function **********/
+/**
+ * @brief Точка входа программы.
+ *
+ * @return 0 при успешном выполнении
+ */
+int main(void)
 {
-    int32_t n_i32 = 0;
-    int32_t m_i32 = 0;
+    static constexpr size_t BUF_SZ = 4096u;
+    char buf[BUF_SZ];
 
-    if (std::scanf("%d %d", &n_i32, &m_i32) != 2)
+    if (std::fgets(buf, static_cast<int>(BUF_SZ), stdin) == nullptr)
     {
+        std::printf("0\n");
         return 0;
     }
 
-    if (n_i32 <= 0)
+    /* find length of string */
+    size_t len = 0u;
+    for (size_t i = 0u; i != BUF_SZ; ++i)
     {
-        std::putchar('\n');
-        return 0;
-    }
-
-    uint32_t count_u32 = static_cast<uint32_t>(n_i32);
-
-    /* Allocate arrays (C-style) */
-    int32_t *arr_a_i32 = static_cast<int32_t *>(std::malloc(static_cast<size_t>(count_u32) * sizeof(int32_t)));
-    int32_t *arr_b_i32 = static_cast<int32_t *>(std::malloc(static_cast<size_t>(count_u32) * sizeof(int32_t)));
-    if (arr_a_i32 == nullptr || arr_b_i32 == nullptr)
-    {
-        std::free(arr_a_i32);
-        std::free(arr_b_i32);
-        return 0;
-    }
-
-    for (uint32_t i_u32 = 0; i_u32 < count_u32; ++i_u32)
-    {
-        arr_a_i32[i_u32] = static_cast<int32_t>(i_u32);
-    }
-    for (uint32_t i_u32 = 0; i_u32 < count_u32; ++i_u32)
-    {
-        arr_b_i32[i_u32] = static_cast<int32_t>(i_u32);
-    }
-
-    for (uint32_t i_u32 = 0; i_u32 < count_u32; ++i_u32)
-    {
-        int32_t sum_i32 = arr_a_i32[i_u32] + arr_b_i32[i_u32];
-        std::printf("%d", sum_i32);
-        if (i_u32 + 1 < count_u32)
+        if (buf[i] == '\0')
         {
-            std::putchar(' ');
+            len = i;
+            break;
         }
     }
-    std::putchar('\n');
 
-    std::free(arr_a_i32);
-    std::free(arr_b_i32);
+    /* remove trailing newline or spaces */
+    size_t idx = (len == 0u) ? 0u : (len - 1u);
+    while (len != 0u)
+    {
+        if (buf[idx] == '\n' || buf[idx] == '\r' || buf[idx] == ' ' || buf[idx] == '\t')
+        {
+            if (idx == 0u)
+            {
+                len = 0u;
+                break;
+            }
+            --idx;
+            len = idx + 1u;
+            continue;
+        }
+        break;
+    }
 
+    /* count last word length */
+    size_t last_len = 0u;
+    if (len != 0u)
+    {
+        idx = len - 1u;
+        while (true)
+        {
+            if (buf[idx] == ' ' || buf[idx] == '\t' || buf[idx] == '\n' || buf[idx] == '\r')
+            {
+                break;
+            }
+            ++last_len;
+            if (idx == 0u)
+            {
+                break;
+            }
+            --idx;
+        }
+    }
+
+    std::printf("%zu\n", last_len);
     return 0;
 }
