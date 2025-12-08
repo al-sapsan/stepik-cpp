@@ -1,36 +1,19 @@
 /**********************************************************************
  * @file script3.cpp
- * @brief Обезвреживание IPv4-адреса (defanged IP).
+ * @brief Поиск длины самой длинной непрерывной возрастающей последовательности.
  *
- * @details Считывает корректный IPv4-адрес и заменяет каждую точку "."
- * на "[.]", создавая обезвреженную версию адреса.
+ * @details Считывает последовательность целых чисел и находит длину
+ * максимальной непрерывной (подряд идущей) возрастающей подпоследовательности.
+ * Алгоритм работает за O(N) - один проход по входным данным.
  *
  * @date 2025-01-07
  * @copyright Copyright (c) 2025
  **********************************************************************/
 
 /********** Core **********/
-#include <cstdint>
 #include <iostream>
-#include <string>
-
-/********** Data Types **********/
-typedef uint32_t u32_t;  ///< Unsigned 32-bit integer
-typedef size_t sz_t;     ///< Size type
-
-/********** Function Prototypes **********/
-/**
- * @brief Обезвреживает IPv4-адрес.
- *
- * @details Заменяет каждую точку "." на "[.]" в IP-адресе.
- * Например: "1.1.1.1" -> "1[.]1[.]1[.]1"
- *
- * @param[in] ref_ip Ссылка на строку с IPv4-адресом
- * @return std::string Обезвреженный IP-адрес
- *
- * @note Функция не модифицирует входную строку
- */
-std::string defang_ip_address(const std::string &ref_ip);
+#include <vector>
+#include <limits>
 
 /********** Main Function **********/
 /**
@@ -40,46 +23,54 @@ std::string defang_ip_address(const std::string &ref_ip);
  */
 int main(void)
 {
-    std::string ip_address;
+    std::vector<long long> nums;
+    long long value;
 
-    // Чтение IPv4-адреса из stdin
-    if (!std::getline(std::cin, ip_address))
-    {
+
+    // Считываем все числа из входного потока
+    while (std::cin >> value)
+        {
+            if (value > std::numeric_limits<long long>::max() - 1000 ||
+                value < std::numeric_limits<long long>::min() + 1000)
+            {
+                std::cerr << "Warning: Value near 64-bit limits: " << value << std::endl;
+            }
+            nums.push_back(value);
+        }
+
+    if (std::cin.fail() && !std::cin.eof())
+        {
+            std::cin.clear();
+            std::string dummy;
+            std::cin >> dummy; // Consume invalid input
+            std::cerr << "Warning: Skipped invalid input" << std::endl;
+        }
+
+        if (nums.empty())
+        {
+            std::cout << 0 << std::endl;
+            return 0;
+        }
+
+    // Инициализация переменных для отслеживания длин последовательностей
+    size_t max_length = 1;      // Максимальная длина возрастающей последовательности
+    size_t current_length = 1;  // Текущая длина возрастающей последовательности
+
+    // Проходим по вектору, начиная со второго элемента
+    for (size_t i = 1; i < nums.size(); ++i)
+        {
+            if (nums[i] > nums[i - 1])
+            {
+                ++current_length;
+                if (current_length > max_length)
+                    max_length = current_length;
+            }
+            else
+            {
+                current_length = 1;
+            }
+        }
+
+        std::cout << max_length << std::endl;
         return 0;
     }
-
-    // Обезвреживание IP-адреса
-    std::string defanged_ip = defang_ip_address(ip_address);
-
-    // Вывод результата
-    std::cout << defanged_ip << std::endl;
-
-    return 0;
-}
-
-/********** Function Implementation **********/
-std::string defang_ip_address(const std::string &ref_ip)
-{
-    std::string result;
-
-    // Резервируем память для результата (оптимизация)
-    // Максимум 3 точки, каждая заменяется на "[.]" (+2 символа)
-    result.reserve(ref_ip.length() + 6u);
-
-    // Проход по всем символам входной строки
-    for (sz_t i = 0u; i != ref_ip.length(); ++i)
-    {
-        if (ref_ip[i] == '.')
-        {
-            // Заменяем точку на "[.]"
-            result += "[.]";
-        }
-        else
-        {
-            // Копируем символ как есть
-            result += ref_ip[i];
-        }
-    }
-
-    return result;
-}

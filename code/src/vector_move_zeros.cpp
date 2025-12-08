@@ -24,17 +24,17 @@ int main(void)
 {
     std::vector<int> nums;
     int value;
-    
+
     // Считываем все числа из входного потока
     while (std::cin >> value)
     {
         nums.push_back(value);
     }
-    
+
     // Используем два указателя: один для чтения, другой для записи
     // writePos указывает на позицию, куда нужно записать следующий ненулевой элемент
     size_t writePos = 0u;
-    
+
     // Проходим по всем элементам и перемещаем ненулевые элементы в начало
     for (size_t readPos = 0u; readPos < nums.size(); ++readPos)
     {
@@ -44,13 +44,13 @@ int main(void)
             ++writePos;
         }
     }
-    
+
     // Заполняем оставшуюся часть нулями
     for (size_t i = writePos; i < nums.size(); ++i)
     {
         nums[i] = 0;
     }
-    
+
     // Выводим результат
     for (size_t i = 0u; i < nums.size(); ++i)
     {
@@ -60,11 +60,11 @@ int main(void)
         }
         std::cout << nums[i];
     }
-    
+
     if (!nums.empty())
     {
         std::cout << " " << std::endl;
     }
-    
+
     return 0;
 }

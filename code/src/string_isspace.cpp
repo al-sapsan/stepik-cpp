@@ -34,7 +34,7 @@ int main(void)
 
     input_str.erase(std::remove_if(input_str.begin(), input_str.end(), ::isspace), input_str.end());
 
-        std::cout << input_str << std::endl;
+    std::cout << input_str << std::endl;
 
-        return 0;
+    return 0;
 }

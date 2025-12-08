@@ -57,7 +57,7 @@ int main(void)
         }
 
         last_seen[c] = right;
-        
+
         size_t current_length = right - left + 1u;
         if (current_length > max_length)
         {

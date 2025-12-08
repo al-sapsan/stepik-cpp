@@ -49,7 +49,7 @@ int main(void)
     {
         std::cout << n << " ";
     }
-    
+
     if (!numbers.empty())
     {
         std::cout << std::endl;
