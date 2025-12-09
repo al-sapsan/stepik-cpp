@@ -1,9 +1,10 @@
 /**********************************************************************
  * @file script1.cpp
- * @brief Удаление чётных чисел из вектора.
+ * @brief Поиск максимального элемента из 5 целых чисел.
  *
- * @details Программа считывает последовательность целых чисел,
- * удаляет из неё все чётные числа и выводит результат.
+ * @details Программа считывает 5 целых чисел, разделённых пробелом,
+ * и находит максимальный элемент без использования встроенных
+ * алгоритмов.
  *
  * @date 2025-01-01
  * @copyright Copyright (c) 2025
@@ -11,7 +12,6 @@
 
 /********** Core **********/
 #include <iostream>
-#include <vector>
 
 /********** Main Function **********/
 /**
@@ -21,39 +21,25 @@
  */
 int main(void)
 {
-    std::vector<int> numbers;
-    int num;
+    const int SIZE = 5;
+    int numbers[SIZE];
 
-    /* Read all numbers from input */
-    while (std::cin >> num)
+    for (int i = 0; i < SIZE; ++i)
     {
-        numbers.push_back(num);
+        std::cin >> numbers[i];
     }
 
-    /* Remove even numbers using erase-remove idiom */
-    auto it = numbers.begin();
-    while (it != numbers.end())
+    /* Find maximum element */
+    int max = numbers[0];
+    for (int i = 1; i < SIZE; ++i)
     {
-        if (*it % 2 == 0)
+        if (numbers[i] > max)
         {
-            it = numbers.erase(it);
-        }
-        else
-        {
-            ++it;
+            max = numbers[i];
         }
     }
 
-    /* Output remaining odd numbers */
-    for (const auto& n : numbers)
-    {
-        std::cout << n << " ";
-    }
-    
-    if (!numbers.empty())
-    {
-        std::cout << std::endl;
-    }
+    std::cout << max << '\n';
 
     return 0;
 }

@@ -6,41 +6,35 @@
  * и вычисляет сумму всех чётных элементов массива.
  * Использует std::array и современный C++.
  *
- * @date 2025-01-01
- * @copyright Copyright (c) 2025
+ * @date 2024-12-10
+ * @copyright Copyright (c) 2024
  **********************************************************************/
 
-/********** Core **********/
 #include <array>
 #include <iostream>
+#include <numeric>
 
-/********** Main Function **********/
-/**
- * @brief Точка входа программы.
- *
- * @return 0 при успешном выполнении
- */
-int main(void)
+int main()
 {
     constexpr size_t SIZE = 5;
-    std::array<int, SIZE> numbers;
+    std::array<int, SIZE> numbers{};
 
+    // Read all 5 numbers
     for (auto& num : numbers)
     {
-        std::cin >> num;
-    }
-
-    /* Calculate sum of even elements */
-    int sum = 0;
-    for (const auto& num : numbers)
-    {
-        if (num % 2 == 0)
+        if (!(std::cin >> num))
         {
-            sum += num;
+            std::cerr << "Error: Invalid input detected.\n";
+            return 1;
         }
     }
 
-    /* Output the sum */
+    // Sum even numbers using std::accumulate
+    int sum = std::accumulate(numbers.begin(), numbers.end(), 0,
+                              [](int acc, int n) {
+                                  return (n % 2 == 0) ? acc + n : acc;
+                              });
+
     std::cout << sum << '\n';
     return 0;
 }

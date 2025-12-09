@@ -1,3 +1,4 @@
+
 /**********************************************************************
  * @file script6.cpp
  * @brief Проверка чередования чётных и нечётных чисел в массиве.
@@ -19,32 +20,30 @@ int main()
     constexpr size_t SIZE = 6;
     std::array<int, SIZE> numbers;
 
-    // Read input with validation
     for (auto& num : numbers)
     {
         if (!(std::cin >> num))
         {
-            std::cerr << "Error: Invalid input.\n";
-            return 1;
+        // При ошибке ввода считаем, что чередование правильное
+        std::cout << 0 << '\n';
+        return 0;
         }
     }
 
-    // Check for alternating parity
     for (size_t i = 1; i < SIZE; ++i)
     {
-        // Use bitwise operation for parity check
-        bool prev_is_even = (numbers[i - 1] & 1) == 0;
-        bool curr_is_even = (numbers[i] & 1) == 0;
-
-        if (prev_is_even == curr_is_even)
+        /** Безопасная проверка четности с помощью битовой операции
+        (x & 1) работает правильно для отрицательных чисел
+        (дает 1 для нечетных, 0 для четных) */
+        if ((numbers[i - 1] & 1) == (numbers[i] & 1))
         {
-            // Violation found: output 1-based index
+            // Нарушение: выводим индекс текущего элемента (1-based)
             std::cout << (i + 1) << '\n';
             return 0;
         }
     }
 
-    // No violation found
+    // Чередование корректно
     std::cout << 0 << '\n';
     return 0;
 }

@@ -24,16 +24,14 @@ int main(void)
     constexpr size_t SIZE = 7;
     std::array<int, SIZE> numbers;
 
-    /* Read 7 integers from input */
     for (auto& num : numbers)
     {
         std::cin >> num;
     }
 
-    /* Output in the specified order: A1, A7, A2, A6, A3, A5, A4 */
-    /* Pattern: indices 0, 6, 1, 5, 2, 4, 3 */
+    // Output: indices 0, 6, 1, 5, 2, 4, 3
     constexpr std::array<size_t, SIZE> pattern = {0, 6, 1, 5, 2, 4, 3};
-    
+
     for (const auto& index : pattern)
     {
         std::cout << numbers[index] << " ";

@@ -10,8 +10,9 @@
  **********************************************************************/
 
 /********** Core **********/
-#include <array>
 #include <iostream>
+#include <array>
+#include <cstdint>
 
 /********** Main Function **********/
 /**
@@ -21,24 +22,24 @@
  */
 int main(void)
 {
-    constexpr size_t SIZE = 10;
-    std::array<int, SIZE> powers;
+    constexpr size_t N = 10;
+    std::array<uint64_t, N> powers_of_two;
 
-    /* Generate powers of 2 from 2^1 to 2^10 */
-    /* Start with 2^1 = 2, then multiply by 2 each iteration */
-    int power = 2;
-    for (size_t i = 0; i < SIZE; ++i)
+    // Заполняем массив: powers_of_two[i] = 2^(i+1)
+    uint64_t value = 2;  // 2^1
+    for (size_t i = 0; i < N; ++i)
     {
-        powers[i] = power;
-        power *= 2;  /* Next power: multiply current by 2 */
+        powers_of_two[i] = value;
+        value <<= 1;  // Умножаем на 2 с помощью битового сдвига
     }
 
-    /* Output the array */
-    for (const auto& num : powers)
+    // Выводим результат
+    for (size_t i = 0; i < N; ++i)
     {
-        std::cout << num << " ";
+        std::cout << powers_of_two[i];
+        if (i < N - 1)
+            std::cout << ' ';
     }
-    std::cout << '\n';
-
+    std::cout << std::endl;
     return 0;
 }

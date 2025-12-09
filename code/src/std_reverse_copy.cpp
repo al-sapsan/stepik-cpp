@@ -6,47 +6,44 @@
  * выводит элементы в обратном порядке, при этом каждый элемент
  * умножается на следующий (завершающий элемент умножается на 1).
  *
- * @date 2025-01-01
- * @copyright Copyright (c) 2025
+ * @date 2024-12-10
+ * @copyright Copyright (c) 2024
  **********************************************************************/
 
-/********** Core **********/
 #include <array>
 #include <iostream>
+#include <algorithm> // for std::reverse_copy
 
-/********** Main Function **********/
-/**
- * @brief Точка входа программы.
- *
- * @return 0 при успешном выполнении
- */
-int main(void)
+int main()
 {
     constexpr size_t SIZE = 5;
     std::array<int, SIZE> numbers;
-    std::array<int, SIZE> result;
+    std::array<int, SIZE> reversed;
 
+    // Read input with validation
     for (auto& num : numbers)
     {
-        std::cin >> num;
+        if (!(std::cin >> num))
+        {
+            std::cerr << "Error: Invalid input.\n";
+            return 1;
+        }
     }
 
-    /* Reverse the array first */
-    for (size_t i = 0; i < SIZE; ++i)
-    {
-        result[i] = numbers[SIZE - 1 - i];
-    }
+    // Reverse the array
+    std::reverse_copy(numbers.begin(), numbers.end(), reversed.begin());
 
-    /* Multiply each element by the next, last by 1 */
+    // Apply multiplication: each element *= next (last *= 1)
     for (size_t i = 0; i < SIZE - 1; ++i)
     {
-        result[i] = result[i] * result[i + 1];
+        reversed[i] *= reversed[i + 1];
     }
-    result[SIZE - 1] = result[SIZE - 1] * 1;
 
+    // Output with no trailing space
     for (size_t i = 0; i < SIZE; ++i)
     {
-        std::cout << result[i] << " ";
+        std::cout << reversed[i];
+        if (i != SIZE - 1) std::cout << ' ';
     }
     std::cout << '\n';
 

@@ -34,13 +34,13 @@ int main(void)
     int sum = 0;
     for (const auto& num : numbers)
     {
-        if (num % 2 == 0)
+    /** Используем битовую операцию для проверки четности
+    (num & 1) == 0 означает, что младший бит равен 0 → число четное */
+        if ((num & 1) == 0)
         {
             sum += num;
         }
     }
-
-    /* Output the sum */
-    std::cout << sum << '\n';
+    std::cout << sum << std::endl;
     return 0;
 }
