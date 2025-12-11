@@ -1,17 +1,20 @@
 /**********************************************************************
  * @file script4.cpp
- * @brief Формирование массива степеней двойки.
+ * @brief Умный лифт с обслуживанием пассажиров по направлению движения.
  *
- * @details Программа формирует и выводит целочисленный массив размера 10,
- * содержащий степени двойки от 2^1 до 2^10.
+ * @details Программа моделирует работу умного лифта в небоскрёбе.
+ * Пассажиры, спускающиеся вниз (DOWN), заходят в начало очереди,
+ * пассажиры, поднимающиеся вверх (UP), заходят в конец очереди.
+ * Выводятся имена пассажиров в порядке их выхода из лифта.
  *
  * @date 2025-01-01
  * @copyright Copyright (c) 2025
  **********************************************************************/
 
 /********** Core **********/
-#include <array>
+#include <deque>
 #include <iostream>
+#include <string>
 
 /********** Main Function **********/
 /**
@@ -21,24 +24,33 @@
  */
 int main(void)
 {
-    constexpr size_t SIZE = 10;
-    std::array<int, SIZE> powers;
+    int n;
+    std::cin >> n;
 
-    /* Generate powers of 2 from 2^1 to 2^10 */
-    /* Start with 2^1 = 2, then multiply by 2 each iteration */
-    int power = 2;
-    for (size_t i = 0; i < SIZE; ++i)
+    std::deque<std::string> elevator;
+
+    /* Board passengers into elevator */
+    for (int i = 0; i < n; ++i)
     {
-        powers[i] = power;
-        power *= 2;  /* Next power: multiply current by 2 */
+        std::string name;
+        std::string direction;
+        std::cin >> name >> direction;
+
+        if (direction == "DOWN")
+        {
+            elevator.push_front(name);
+        }
+        else // UP
+        {
+            elevator.push_back(name);
+        }
     }
 
-    /* Output the array */
-    for (const auto& num : powers)
+    /* Output passengers in exit order */
+    for (const auto& passenger : elevator)
     {
-        std::cout << num << " ";
+        std::cout << passenger << '\n';
     }
-    std::cout << '\n';
 
     return 0;
 }

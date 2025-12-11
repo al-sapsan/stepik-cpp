@@ -1,18 +1,30 @@
 /**********************************************************************
  * @file script2.cpp
- * @brief Подсчёт суммы всех чётных элементов массива.
+ * @brief Работа с очередью планет и фильтрация по количеству спутников.
  *
- * @details Программа считывает 5 целых чисел, разделённых пробелом,
- * и вычисляет сумму всех чётных элементов массива.
- * Использует std::array и современный C++.
+ * @details Программа создаёт очередь планет std::deque<PLANET>,
+ * добавляет планеты в начало очереди и выводит названия планет
+ * с количеством спутников менее 3.
  *
  * @date 2025-01-01
  * @copyright Copyright (c) 2025
  **********************************************************************/
 
 /********** Core **********/
-#include <array>
+#include <deque>
 #include <iostream>
+#include <string>
+
+/********** Structures **********/
+/**
+ * @brief Структура, описывающая планету.
+ */
+struct PLANET
+{
+    std::string name;      // Название планеты
+    double diameter = 0.0; // Диаметр (в км)
+    unsigned int moons = 0; // Количество спутников
+};
 
 /********** Main Function **********/
 /**
@@ -22,25 +34,30 @@
  */
 int main(void)
 {
-    constexpr size_t SIZE = 5;
-    std::array<int, SIZE> numbers;
+    std::deque<PLANET> planets;
 
-    for (auto& num : numbers)
-    {
-        std::cin >> num;
-    }
+    /* Add planets to the front of the deque */
+    planets.push_front({"Меркурий", 4879, 0});
+    planets.push_front({"Сатурн", 116460, 83});
+    planets.push_front({"Венера", 12104, 0});
+    planets.push_front({"Юпитер", 139820, 79});
+    planets.push_front({"Марс", 6779, 2});
 
-    /* Calculate sum of even elements */
-    int sum = 0;
-    for (const auto& num : numbers)
+    /* Output planets with less than 3 moons */
+    bool first = true;
+    for (const auto& planet : planets)
     {
-        if (num % 2 == 0)
+        if (planet.moons < 3)
         {
-            sum += num;
+            if (!first)
+            {
+                std::cout << ' ';
+            }
+            std::cout << planet.name;
+            first = false;
         }
     }
+    std::cout << '\n';
 
-    /* Output the sum */
-    std::cout << sum << '\n';
     return 0;
 }

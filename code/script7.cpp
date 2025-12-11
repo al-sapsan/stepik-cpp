@@ -1,60 +1,83 @@
 /**********************************************************************
  * @file script7.cpp
- * @brief Удаление дубликатов из отсортированного массива, возвращает k — количество уникальных элементов.
+ * @brief Управление заказами в кафе с использованием списка.
  *
- * @details Считывает n и n отсортированных целых чисел, перемещает уникальные
- * элементы в начало массива и выводит количество уникальных элементов k.
+ * @details Программа обрабатывает заказы в кафе, поддерживая операции:
+ * - complete: удаление первого заказа из списка
+ * - urgent X: добавление срочного заказа X в начало списка
  *
+ * @version 1.0
  * @date 2025-11-28
+ *
  * @copyright Copyright (c) 2025
  **********************************************************************/
 
 /********** Core **********/
-#include <cstdint>
-#include <cstdio>
-#include <vector>
+#include <cstddef>
+#include <iostream>
+#include <list>
+#include <string>
 
 /********** Main Function **********/
 /**
- * @brief Точка входа.
+ * @brief Точка входа в программу.
+ *
+ * @details Считывает начальные заказы, обрабатывает операции
+ * complete и urgent, выводит итоговый список заказов.
  *
  * @return 0 при успешном завершении
  */
 int main(void)
 {
-    int32_t n_i32 = 0;
-    if (std::scanf("%d", &n_i32) != 1)
+    int n;
+    std::cin >> n;
+
+    std::list<std::string> orders;
+
+    // Чтение заказов
+    for (int i = 0; i < n; ++i)
     {
-        return 0;
+        std::string order;
+        std::cin >> order;
+        orders.push_back(order);
     }
 
-    if (n_i32 <= 0)
+    int m;
+    std::cin >> m;
+
+    // Обработка команд
+    for (int i = 0; i < m; ++i)
     {
-        std::printf("0\n");
-        return 0;
-    }
+        std::string command;
+        std::cin >> command;
 
-    const size_t n_sz = static_cast<size_t>(n_i32);
-    std::vector<int32_t> arr_i32;
-    arr_i32.resize(n_sz);
-
-    for (size_t i = 0; i != n_sz; ++i)
-    {
-        std::scanf("%d", &arr_i32[i]);
-    }
-
-    size_t write_idx = 0;
-
-    for (size_t i = 0; i != n_sz; ++i)
-    {
-        if (write_idx == 0 || arr_i32[i] != arr_i32[write_idx - 1])
+        if (command == "complete")
         {
-            arr_i32[write_idx] = arr_i32[i];
-            ++write_idx;
+            if (!orders.empty())
+                orders.pop_front();
+        }
+        else // urgent
+        {
+            std::string item;
+            std::cin >> item;
+            orders.push_front(item);
         }
     }
 
-    std::printf("%zu\n", write_idx);
+    // Вывод
+    if (orders.empty())
+    {
+        std::cout << "empty\n";
+    }
+    else
+    {
+        // По примерам требуется пробел в конце
+        for (const auto& order : orders)
+        {
+            std::cout << order << " ";
+        }
+        std::cout << "\n";
+    }
 
     return 0;
 }

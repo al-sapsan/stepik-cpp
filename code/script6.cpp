@@ -1,50 +1,63 @@
 /**********************************************************************
  * @file script6.cpp
- * @brief Проверка чередования чётных и нечётных чисел в массиве.
+ * @brief Управление стопкой контрольных работ с запросами.
  *
- * @details Программа считывает 6 целых чисел, разделённых пробелом,
- * и проверяет, чередуются ли чётные и нечётные числа. Если да —
- * выводит 0, иначе — выводит индекс первого элемента, нарушающего
- * закономерность (индексация с 1).
+ * @details Программа моделирует сдачу контрольных работ студентами.
+ * Студенты кладут работы либо сверху (top), либо снизу (bottom) стопки.
+ * Затем программа отвечает на запросы о том, чья работа находится
+ * на указанной позиции в стопке.
  *
- * @date 2024-12-10
- * @copyright Copyright (c) 2024
+ * @date 2025-01-01
+ * @copyright Copyright (c) 2025
  **********************************************************************/
 
-#include <array>
+/********** Core **********/
+#include <deque>
 #include <iostream>
+#include <string>
 
-int main()
+/********** Main Function **********/
+/**
+ * @brief Точка входа программы.
+ *
+ * @return 0 при успешном выполнении
+ */
+int main(void)
 {
-    constexpr size_t SIZE = 6;
-    std::array<int, SIZE> numbers;
+    int n;
+    std::cin >> n;
 
-    // Read input with validation
-    for (auto& num : numbers)
+    std::deque<std::string> stack;
+
+    /* Build the stack of exam papers */
+    for (int i = 0; i < n; ++i)
     {
-        if (!(std::cin >> num))
+        std::string surname;
+        std::string position;
+        std::cin >> surname >> position;
+
+        if (position == "top")
         {
-            std::cerr << "Error: Invalid input.\n";
-            return 1;
+            stack.push_front(surname);
+        }
+        else // bottom
+        {
+            stack.push_back(surname);
         }
     }
 
-    // Check for alternating parity
-    for (size_t i = 1; i < SIZE; ++i)
-    {
-        // Use bitwise operation for parity check
-        bool prev_is_even = (numbers[i - 1] & 1) == 0;
-        bool curr_is_even = (numbers[i] & 1) == 0;
+    int m;
+    std::cin >> m;
 
-        if (prev_is_even == curr_is_even)
-        {
-            // Violation found: output 1-based index
-            std::cout << (i + 1) << '\n';
-            return 0;
-        }
+    /* Process queries */
+    for (int i = 0; i < m; ++i)
+    {
+        int x;
+        std::cin >> x;
+        
+        /* Output the surname at position x (1-based indexing) */
+        std::cout << stack[x - 1] << '\n';
     }
 
-    // No violation found
-    std::cout << 0 << '\n';
     return 0;
 }

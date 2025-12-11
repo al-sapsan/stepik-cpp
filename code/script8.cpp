@@ -1,68 +1,76 @@
 /**********************************************************************
  * @file script8.cpp
- * @brief Поиск индекса target в отсортированном уникальном массиве или места для вставки.
+ * @brief Управление историей действий в текстовом редакторе.
  *
- * @details Считывает n, затем n уникальных отсортированных целых чисел nums,
- * затем число target. Выводит индекс найденного элемента или позицию,
- * куда его следует вставить, чтобы сохранить порядок.
+ * @details Программа обрабатывает последовательность действий:
+ * - add X: добавить действие X в историю
+ * - undo: удалить последнее действие из истории
+ * - print: вывести все действия в порядке выполнения
  *
+ * @version 1.0
  * @date 2025-11-28
+ *
  * @copyright Copyright (c) 2025
  **********************************************************************/
 
 /********** Core **********/
+#include <cstddef>
 #include <cstdint>
-#include <cstdio>
-#include <vector>
+#include <deque>
+#include <iostream>
+#include <string>
 
 /********** Main Function **********/
 /**
- * @brief Точка входа программы.
+ * @brief Точка входа в программу.
+ *
+ * @details Считывает количество операций, обрабатывает команды
+ * add, undo и print, управляя историей действий редактора.
  *
  * @return 0 при успешном завершении
  */
 int main(void)
 {
     int32_t n_i32 = 0;
-    if (std::scanf("%d", &n_i32) != 1)
+    std::cin >> n_i32;
+
+    std::deque<std::string> history_deque;
+
+    // Обрабатываем операции
+    for (size_t i = 0; i < static_cast<size_t>(n_i32); i++)
     {
-        return 0;
-    }
+        std::string command_str;
+        std::cin >> command_str;
 
-    const size_t count = static_cast<size_t>(n_i32 > 0 ? n_i32 : 0);
-
-    std::vector<int32_t> nums_i32;
-    nums_i32.resize(count);
-
-    for (size_t i = 0; i != count; ++i)
-    {
-        std::scanf("%d", &nums_i32[i]);
-    }
-
-    int32_t target_i32 = 0;
-    if (std::scanf("%d", &target_i32) != 1)
-    {
-        return 0;
-    }
-
-    /* binary search for lower_bound */
-    size_t left = 0;
-    size_t right = count;
-    while (left != right)
-    {
-        size_t mid = left + ((right - left) >> 1);
-        if (nums_i32[mid] < target_i32)
+        if (command_str == "add")
         {
-            left = mid + 1;
+            std::string action_str;
+            std::cin >> action_str;
+            history_deque.push_back(action_str);
         }
-        else
+        else if (command_str == "undo")
         {
-            right = mid;
+            if (!history_deque.empty())
+            {
+                history_deque.pop_back();
+            }
+        }
+        else if (command_str == "print")
+        {
+            if (history_deque.empty())
+            {
+                std::cout << "empty\n";
+            }
+            else
+            {
+                for (const auto& action : history_deque)
+                {
+                    std::cout << action << " ";
+                }
+                std::cout << "\n";
+            }
         }
     }
-
-    /* left is the insertion position; if element equal, it's found */
-    std::printf("%zu\n", left);
 
     return 0;
 }
