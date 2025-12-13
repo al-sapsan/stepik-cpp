@@ -12,34 +12,76 @@
 
 /********** Core **********/
 #include <iostream>
+#include <sstream>
+#include <vector>
+
+/********** Functions Declarations **********/
+
+/**
+ * @brief Читает последовательность целых чисел из строки
+ * @param input Входная строка с числами, разделенными пробелами
+ * @return Вектор целых чисел
+ */
+std::vector<int> readSequence(const std::string &input);
+
+/**
+ * @brief Фильтрует последовательность, удаляя элементы меньше предыдущего
+ * @param sequence Исходная последовательность
+ * @return Отфильтрованная последовательность
+ */
+std::vector<int> filterSequence(const std::vector<int> &sequence);
 
 /********** Main Function **********/
 /**
  * @brief Точка входа программы.
- *
  * @return 0 при успешном выполнении
  */
-int main(void)
-{
-    const int SIZE = 5;
-    int numbers[SIZE];
+int main() {
+  std::string line;
+  std::getline(std::cin, line);
 
-    for (int i = 0; i < SIZE; ++i)
-    {
-        std::cin >> numbers[i];
+  auto sequence = readSequence(line);
+  auto filtered = filterSequence(sequence);
+
+  // Выводим результат
+  for (size_t i = 0; i < filtered.size(); ++i) {
+    if (i > 0)
+      std::cout << " ";
+    std::cout << filtered[i];
+  }
+  std::cout << " " << '\n';
+
+  return 0;
+}
+
+/********** Functions Implementations **********/
+
+// === < Read Function > === //
+std::vector<int> readSequence(const std::string &input) {
+  std::vector<int> sequence;
+  std::istringstream iss(input);
+  int num;
+
+  while (iss >> num) {
+    sequence.push_back(num);
+  }
+
+  return sequence;
+}
+
+// === < Filter Function > === //
+std::vector<int> filterSequence(const std::vector<int> &sequence) {
+  if (sequence.empty())
+    return {};
+
+  std::vector<int> result;
+  result.push_back(sequence[0]); // Первый элемент всегда остается
+
+  for (size_t i = 1; i < sequence.size(); ++i) {
+    if (sequence[i] >= sequence[i - 1]) {
+      result.push_back(sequence[i]);
     }
+  }
 
-    /* Find maximum element */
-    int max = numbers[0];
-    for (int i = 1; i < SIZE; ++i)
-    {
-        if (numbers[i] > max)
-        {
-            max = numbers[i];
-        }
-    }
-
-    std::cout << max << '\n';
-
-    return 0;
+  return result;
 }
