@@ -13,7 +13,14 @@
 /********** Core **********/
 #include <forward_list>
 #include <iostream>
-#include <stack>
+
+/********** Function Definition **********/
+/**
+ * @brief: Переворачивает односвязный список.
+ * @param list: Исходный односвязный список.
+ * @return: Перевернутый односвязный список.
+ */
+std::forward_list<int> reverse_list(std::forward_list<int> list);
 
 /********** Main Function **********/
 /**
@@ -42,37 +49,38 @@ int main()
         it = numbers.insert_after(it, value);
     }
 
-    // Используем стек для проверки палиндрома
-    std::stack<int> stack;
+    // Создаем обратную копию
+    std::forward_list<int> reversed = reverse_list(numbers);
 
-    // Помещаем первую половину элементов в стек
-    auto current = numbers.begin();
-    for (int i = 0; i < n / 2; ++i)
-    {
-        stack.push(*current);
-        ++current;
-    }
-
-    // Если нечетное количество элементов, пропускаем средний
-    if (n % 2 == 1)
-    {
-        ++current;
-    }
-
-    // Сравниваем вторую половину с элементами из стека
+    // Сравниваем оригинальный и обратный списки
     bool is_palindrome = true;
-    while (current != numbers.end() && !stack.empty())
+    auto it1 = numbers.begin();
+    auto it2 = reversed.begin();
+
+    for (int i = 0; i < n; ++i)
     {
-        if (*current != stack.top())
+        if (*it1 != *it2)
         {
             is_palindrome = false;
             break;
         }
-        ++current;
-        stack.pop();
+        ++it1;
+        ++it2;
     }
 
     std::cout << (is_palindrome ? "YES" : "NO") << '\n';
 
     return 0;
+}
+
+/********** Function Implementation **********/
+
+std::forward_list<int> reverse_list(std::forward_list<int> list)
+{
+    std::forward_list<int> reversed;
+    for (const auto& num : list)
+    {
+        reversed.push_front(num);
+    }
+    return reversed;
 }
