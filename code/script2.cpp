@@ -1,53 +1,97 @@
 /**********************************************************************
  * @file script2.cpp
- * @brief Вывод массива в обратном порядке.
+ * @brief Выводит уникальные слова из двух текстов.
  *
- * @details Программа считывает размер массива n и n целых чисел,
- * затем выводит элементы в обратном порядке через пробел.
- * Использует std::forward_list для хранения данных.
+ * @details Программа считывает два текста, затем выводит уникальные
+ * слова в алфавитном порядке. Если уникальных слов нет, выводит "NO".
  *
- * @date 2025-01-01
+ * @version 1.1
+ * @date 2025-07-07
+ *
  * @copyright Copyright (c) 2025
- **********************************************************************/
+ *********************************************************************/
 
-/********** Core **********/
-#include <forward_list>
+#include <algorithm>
 #include <iostream>
+#include <sstream>
+#include <string>
+#include <unordered_set>
+#include <vector>
 
-/********** Main Function **********/
 /**
- * @brief Точка входа программы.
+ * @brief Выводит уникальные слова из двух текстов.
  *
- * @return 0 при успешном выполнении
+ * @param[in] text1 Первый текст
+ * @param[in] text2 Второй текст
  */
-int main(void)
+void findUniqueWords(const std::string& text1, const std::string& text2)
 {
-    int n;
-    std::cin >> n;
+    std::unordered_set<std::string> set1, set2;
+    std::istringstream iss1(text1);
+    std::istringstream iss2(text2);
 
-    std::forward_list<int> numbers;
-
-    // Читаем элементы и добавляем в начало списка
-    // Таким образом, они автоматически окажутся в обратном порядке
-    for (int i = 0; i < n; ++i)
+    std::string word;
+    while (iss1 >> word)
     {
-        int value;
-        std::cin >> value;
-        numbers.push_front(value);
+        set1.insert(word);
     }
 
-    // Выводим элементы (они уже в обратном порядке)
-    bool first = true;
-    for (const auto& num : numbers)
+    while (iss2 >> word)
     {
-        if (!first)
+        set2.insert(word);
+    }
+
+    // Вектор для хранения уникальных слов
+    std::vector<std::string> uniqueWords;
+
+    // Находим слова, которые есть только в первом тексте
+    for (const auto& word : set1)
+    {
+        if (set2.count(word) == 0)
         {
-            std::cout << ' ';
+            uniqueWords.push_back(word);
         }
-        std::cout << num;
-        first = false;
     }
-    std::cout << '\n';
+
+    // Находим слова, которые есть только во втором тексте
+    for (const auto& word : set2)
+    {
+        if (set1.count(word) == 0)
+        {
+            uniqueWords.push_back(word);
+        }
+    }
+
+    // Если нет уникальных слов
+    if (uniqueWords.empty())
+    {
+        std::cout << "NO" << std::endl;
+        return;
+    }
+
+    // Сортируем вектор
+    std::sort(uniqueWords.begin(), uniqueWords.end());
+
+    // Выводим результат
+    for (const auto& word : uniqueWords)
+    {
+        std::cout << word << " ";
+    }
+    std::cout << std::endl;
+}
+
+/**
+ * @brief Основная функция программы.
+ *
+ * @return 0 в случае успешного завершения
+ */
+int main()
+{
+    std::string text1, text2;
+    std::getline(std::cin, text1);
+    std::getline(std::cin, text2);
+
+    findUniqueWords(text1, text2);
 
     return 0;
 }
