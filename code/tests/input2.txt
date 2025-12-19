@@ -1,2 +1,1 @@
-dog cat mouse
-cat dog mouse
+dog cat dog cat dog mouse

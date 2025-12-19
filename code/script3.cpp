@@ -1,68 +1,116 @@
 /**********************************************************************
- * @file script3.cpp
- * @brief Преобразование двоичного числа в десятичное.
+ * @file word_analyzer.cpp
+ * @brief Инструмент для анализа частоты слов с сохранением порядка появления.
  *
- * @details Программа считывает последовательность битов (0 или 1),
- * хранит их в std::forward_list и преобразует двоичное число
- * в десятичное. Самый значимый бит (MSB) находится в начале списка.
+ * Поддерживаемые платформы: ARM Cortex-M, RISC-V, Xtensa (ESP32), RP2040
  *
- * @date 2025-01-01
+ * @version 3.4
+ * @date 2025-12-19
+ *
  * @copyright Copyright (c) 2025
  **********************************************************************/
 
 /********** Core **********/
-#include <forward_list>
 #include <iostream>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
-/********** Main Function **********/
+/************ Class Prototypes ***********/
+
+// == < Class TextFrequencyAnalyzer > == //
 /**
- * @brief Точка входа программы.
+ * @brief Класс для анализа текста и подсчета частоты слов.
  *
- * @return 0 при успешном выполнении
+ * Сохраняет порядок первого появления слов для корректного вывода отчета.
  */
-int main(void)
+class TextFrequencyAnalyzer
 {
-    int n;
-    std::cin >> n;
+  private:
+    /** @brief Список слов в порядке их первого появления в тексте */
+    std::vector<std::string> m_insertion_order_arr;
 
-    // Обработка случая пустого списка
-    if (n == 0)
+    /** @brief Хеш-карта для хранения частоты встречаемости слов */
+    std::unordered_map<std::string, size_t> m_frequency_map;
+
+  public:
+    /**
+     * @brief Конструктор по умолчанию.
+     */
+    TextFrequencyAnalyzer() = default;
+
+    /**
+     * @brief Обрабатывает поток ввода и анализирует слова.
+     * @param[in] ref_input_stream Ссылка на поток ввода.
+     */
+    void ProcessStream(std::istream& ref_input_stream)
     {
-        std::cout << 0 << '\n';
-        return 0;
+        std::string current_word;
+
+        // Считываем слова, разделенные пробелами
+        while (ref_input_stream >> current_word)
+        {
+            this->AddWord(current_word);
+        }
     }
 
-    std::forward_list<int> bits;
-    std::forward_list<int>::iterator last_it;
-    bool first = true;
-
-    // Читаем биты и добавляем в конец списка
-    for (int i = 0; i < n; ++i)
+    /**
+     * @brief Выводит отчет о частоте слов в консоль.
+     */
+    void PrintReport() const
     {
-        int bit;
-        std::cin >> bit;
-
-        if (first)
+        // Используем size_t для индексации вектора согласно конвенции
+        for (size_t i = 0; i < m_insertion_order_arr.size(); ++i)
         {
-            bits.push_front(bit);
-            last_it = bits.begin();
-            first = false;
+            const std::string& ref_word = m_insertion_order_arr[i];
+
+            // Получаем частоту из карты. Использование .at() гарантирует const-safety.
+            size_t count = m_frequency_map.at(ref_word);
+
+            std::cout << ref_word << " " << count << "\n";
+        }
+    }
+
+  private:
+    /**
+     * @brief Добавляет слово в структуры данных.
+     * @param[in] ref_word Строка с новым словом.
+     */
+    void AddWord(const std::string& ref_word)
+    {
+        // Проверяем, встречалось ли слово ранее
+        if (m_frequency_map.find(ref_word) == m_frequency_map.end())
+        {
+            // Новое слово: запоминаем порядок появления
+            m_insertion_order_arr.push_back(ref_word);
+            m_frequency_map[ref_word] = 1;
         }
         else
         {
-            last_it = bits.insert_after(last_it, bit);
+            // Существующее слово: инкрементируем счетчик
+            m_frequency_map[ref_word]++;
         }
     }
+};
 
-    // Преобразуем двоичное число в десятичное
-    // Используем формулу: result = result * 2 + bit
-    long long decimal = 0;
-    for (const auto& bit : bits)
-    {
-        decimal = decimal * 2 + bit;
-    }
+/********** Main Function **********/
+/**
+ * @brief Точка входа в программу.
+ * @return Код завершения (0 — успешно).
+ */
+int main(void)
+{
+    // Оптимизация стандартных потоков ввода-вывода
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL);
 
-    std::cout << decimal << '\n';
+    TextFrequencyAnalyzer analyzer;
+
+    // 1. Сбор и обработка данных
+    analyzer.ProcessStream(std::cin);
+
+    // 2. Вывод результатов в требуемом формате
+    analyzer.PrintReport();
 
     return 0;
 }
