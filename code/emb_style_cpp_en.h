@@ -150,7 +150,7 @@ extern "C"
      * @warning Safety warnings
      * @see Related functions
      */
-
+    // Doxygen comments must be in Russian, but the section header in English
     //==============================================================================
     // Variable Naming Conventions
     //==============================================================================
@@ -239,6 +239,18 @@ extern "C"
     typedef volatile uint32_t vu32_t;
     typedef volatile int32_t vi32_t;
 
+   /** ✅ Use size_t for
+    - Sizes
+    - Lengths
+    - Counts
+    - Indexes tied to size
+    -Memory-related values
+        ❌ Avoid size_t for
+    - Error codes
+    - Signed math
+    - Loop counters that go backwards
+    -Protocol-defined fields
+    */ 
     //==============================================================================
     //  Constants (prefer constexpr)
     //==============================================================================
