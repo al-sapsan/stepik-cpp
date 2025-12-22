@@ -6,8 +6,7 @@
  *
  * @version 3.3
  * @date 2025-07-07
- *
- * @copyright Copyright (c) 2025
+ * @copyright Copyright (c) 2026 Oleg Sokolov
  **********************************************************************/
 
 #ifndef EMB_STYLE_CPP_H
@@ -69,7 +68,7 @@ extern "C"
     * @param kp Proportional coefficient[0.0 - 5.0]
     * @ return HAL_StatusTypeDef Initialization status**/
     HAL_StatusTypeDef
-    pid_init(pid_controller_t *pid, float kp);
+    pid_init(pid_controller_t* pid, float kp);
 
     // 6. Main function
     /* Example:
@@ -101,12 +100,14 @@ extern "C"
     // == < Class Sensor > == //
     class Sensor
     {
-    protected:
+      protected:
         uint8_t pin;   // Пин подключения
         bool isActive; // Состояние активности
-    public:
+      public:
         // Конструктор
-        Sensor(uint8_t p) : pin(p), isActive(false) {}
+        Sensor(uint8_t p) : pin(p), isActive(false)
+        {
+        }
         // Виртуальный метод для инициализации
         virtual void init() = 0;
         // Метод активации датчика
@@ -123,11 +124,13 @@ extern "C"
     // == < Class TemperatureSensor > == //
     class TemperatureSensor : public Sensor
     {
-    private:
+      private:
         float temperature; // Текущее значение температуры
-    public:
+      public:
         // Конструктор
-        TemperatureSensor(uint8_t p) : Sensor(p) {}
+        TemperatureSensor(uint8_t p) : Sensor(p)
+        {
+        }
     };
 
     //==============================================================================
@@ -188,11 +191,11 @@ extern "C"
     volatile u32_t g_system_ticks_vu32 = 0; // Volatile global (e.g., SysTick counter)
     f32_t g_battery_voltage_f32;            // Global float (accessible across modules)
     static i16_t s_error_count_i16 = 0;     // Static (file-scoped) counter
-    u8_t *ptr_buffer_u8;                    // Pointer to uint8_t buffer
-    pid_params_t *ptr_pid;                  // Pointer to PID struct
-    volatile i16_t *vptr_sensor_data_i16;   // Pointer to volatile sensor data
+    u8_t* ptr_buffer_u8;                    // Pointer to uint8_t buffer
+    pid_params_t* ptr_pid;                  // Pointer to PID struct
+    volatile i16_t* vptr_sensor_data_i16;   // Pointer to volatile sensor data
     u16_t (*ptr_arr_matrix_u16)[4];         // Pointer to 4-element array of u16_t
-    f32_t &ref_offset_f32 = 1.25f;          // Reference parameter
+    f32_t& ref_offset_f32 = 1.25f;          // Reference parameter
     f32_t arr_waypoints_f32[10];            // Array of waypoint coordinates
 
     /** Loop variables:
@@ -239,7 +242,7 @@ extern "C"
     typedef volatile uint32_t vu32_t;
     typedef volatile int32_t vi32_t;
 
-   /** ✅ Use size_t for
+    /** ✅ Use size_t for
     - Sizes
     - Lengths
     - Counts
@@ -250,7 +253,7 @@ extern "C"
     - Signed math
     - Loop counters that go backwards
     -Protocol-defined fields
-    */ 
+    */
     //==============================================================================
     //  Constants (prefer constexpr)
     //==============================================================================
@@ -341,10 +344,10 @@ extern "C"
     constexpr u16_t TASK_STACK_HUGE = 2048;   // Computer vision, etc.
 
     /// RTOS task template
-    void task_template(void *pvParameters)
+    void task_template(void* pvParameters)
     {
         // Initialization
-        (void)pvParameters; // Explicit unused warning suppression
+        (void) pvParameters; // Explicit unused warning suppression
 
         // Main task loop
         for (;;) // Prefer over while(1)
@@ -424,23 +427,23 @@ extern "C"
 
     namespace hal
     {
-        void gpio_write(u8_t pin, b_t value);
-        b_t gpio_read(u8_t pin);
-    }
+    void gpio_write(u8_t pin, b_t value);
+    b_t gpio_read(u8_t pin);
+    } // namespace hal
 
     namespace ctrl
     {
-        typedef struct
-        {
-            f32_t m_kp_f32;
-            f32_t m_ki_f32;
-            f32_t m_kd_f32;
-            f32_t m_error_f32;
-        } pid_t;
+    typedef struct
+    {
+        f32_t m_kp_f32;
+        f32_t m_ki_f32;
+        f32_t m_kd_f32;
+        f32_t m_error_f32;
+    } pid_t;
 
-        void pid_reset(pid_t *ptr_pid);
-        f32_t pid_compute(pid_t *ptr_pid, f32_t l_input_f32, f32_t l_target_f32);
-    }
+    void pid_reset(pid_t* ptr_pid);
+    f32_t pid_compute(pid_t* ptr_pid, f32_t l_input_f32, f32_t l_target_f32);
+    } // namespace ctrl
 
 //==============================================================================
 //  Banned in Embedded C++ (Do Not Use)

@@ -1,78 +1,80 @@
-/**********************************************************************
- * @file script6.cpp
- * @brief Проверка односвязного списка на палиндром.
+/************************************************************************
+ * @file meeting_planner.cpp
+ * @brief Определение оптимального момента времени для собрания (медиана)
  *
- * @details Программа считывает N элементов в std::forward_list
- * и определяет, является ли последовательность палиндромом
- * (читается одинаково слева направо и справа налево).
+ * @note Задача сводится к поиску медианы уникальных значений входной 
+ * последовательности для минимизации суммы абсолютных отклонений.
  *
- * @date 2025-01-01
+ * @version 1.0
+ * @date 2023-10-24
  * @copyright Copyright (c) 2025
- **********************************************************************/
+ *************************************************************************/
 
 /********** Core **********/
-#include <forward_list>
 #include <iostream>
-#include <stack>
+#include <vector>
+#include <set>
+
+/********** Typedefs **********/
+using i32_t = int32_t;
+
+/********** Function Prototypes **********/
+
+/**
+ * @brief Находит оптимальное время для собрания
+ * * Алгоритм извлекает уникальные моменты времени, сортирует их и 
+ * выбирает медиану. Математически медиана минимизирует L1-норму 
+ * (сумму абсолютных разностей).
+ * * @param[in] input_times Вектор всех предложенных моментов времени
+ * @return i32_t Оптимальный момент времени T
+ */
+[[nodiscard]] i32_t
+calculate_optimal_time(const std::vector<i32_t>& input_times);
 
 /********** Main Function **********/
+
 /**
- * @brief Точка входа программы.
- * @return 0 при успешном выполнении
- */
+ * @brief Точка входа в программу
+ * @return Код завершения (0 — успешно)
+ **/
 int main()
 {
-    int n;
-    std::cin >> n;
+    std::vector<i32_t> times;
 
-    std::forward_list<int> numbers;
-
-    if (n == 0)
+    // Чтение данных до конца потока ввода
+    i32_t current_val{};
+    while (std::cin >> current_val)
     {
-        std::cout << "YES\n";
+        times.push_back(current_val);
+    }
+
+    if (times.empty())
+    {
         return 0;
     }
 
-    // Чтение списка
-    auto it = numbers.before_begin();
-    for (int i = 0; i < n; ++i)
-    {
-        int value;
-        std::cin >> value;
-        it = numbers.insert_after(it, value);
-    }
-
-    // Используем стек для проверки палиндрома
-    std::stack<int> stack;
-
-    // Помещаем первую половину элементов в стек
-    auto current = numbers.begin();
-    for (int i = 0; i < n / 2; ++i)
-    {
-        stack.push(*current);
-        ++current;
-    }
-
-    // Если нечетное количество элементов, пропускаем средний
-    if (n % 2 == 1)
-    {
-        ++current;
-    }
-
-    // Сравниваем вторую половину с элементами из стека
-    bool is_palindrome = true;
-    while (current != numbers.end() && !stack.empty())
-    {
-        if (*current != stack.top())
-        {
-            is_palindrome = false;
-            break;
-        }
-        ++current;
-        stack.pop();
-    }
-
-    std::cout << (is_palindrome ? "YES" : "NO") << '\n';
+    const i32_t optimal_t = calculate_optimal_time(times);
+    std::cout << optimal_t << std::endl;
 
     return 0;
+}
+
+/********** Function Implementation **********/
+
+i32_t calculate_optimal_time(const std::vector<i32_t>& input_times)
+{
+    // 1. Извлекаем только уникальные моменты времени (согласно условию задачи)
+    std::set<i32_t> unique_points(input_times.begin(), input_times.end());
+
+    // 2. Переносим уникальные точки в вектор для доступа по индексу
+    std::vector<i32_t> sorted_unique(unique_points.begin(), unique_points.end());
+
+    /** 3. Выбор оптимального момента T.
+    Для минимизации суммы |T - x_i| оптимальным значением является медиана.
+    Если количество элементов n нечетное — это центральный элемент.
+    Если четное — любой элемент между двумя центральными (включая их).
+    По тестам sample output выбирается левая медиана: sorted_unique[(n-1)/2]
+    */
+    const size_t n = sorted_unique.size();
+    return sorted_unique[(n - 1) / 2];
 }

@@ -1,72 +1,99 @@
-/**********************************************************************
+/************************************************************************
  * @file script7.cpp
- * @brief Удаление всех узлов с заданным значением из односвязного списка.
- *
- * @details Программа считывает N элементов в std::forward_list,
- * затем удаляет все узлы со значением val и выводит обновлённый
- * список или "EMPTY", если список стал пустым.
- *
- * @date 2025-01-01
- * @copyright Copyright (c) 2025
- **********************************************************************/
+ * @brief Программа для нахождения пересечения двух последовательностей чисел
+ * @note Каждое число в результате встречается только один раз.
+ * 
+ * @version 1.0 (C++20)
+ * @date 
+ * @copyright Copyright (c) 2025 Oleg Sokolov
+ *************************************************************************/
 
 /********** Core **********/
-#include <forward_list>
 #include <iostream>
+#include <string>
+#include <sstream>
+#include <vector>
+
+/********** STL Containers **********/
+#include <set>
+#include <algorithm>
+#include <iterator>
+
+/********** Function Prototypes **********/
+
+/**
+ * @brief Считывает строку чисел и преобразует её в упорядоченное множество
+ * @param[in] input_line Строка, содержащая числа, разделенные пробелом
+ * @return std::set<int> Множество уникальных целых чисел
+ **/
+[[nodiscard]] std::set<int>
+parse_line_to_set(const std::string& input_line);
 
 /********** Main Function **********/
+
 /**
- * @brief Точка входа программы.
- *
- * @return 0 при успешном выполнении
- */
-int main(void)
+ * @brief Точка входа в программу
+ * @return Код завершения (0 — успешно)
+ **/
+int main()
 {
-    int n;
-    std::cin >> n;
+    std::string line1;
+    std::string line2;
 
-    std::forward_list<int> numbers;
-    std::forward_list<int>::iterator last_it;
-    bool first = true;
-
-    // Читаем элементы и добавляем в конец списка
-    for (int i = 0; i < n; ++i)
+    // Считываем первую последовательность
+    if (!std::getline(std::cin, line1))
     {
-        int value;
-        std::cin >> value;
+        return 0;
+    }
 
-        if (first)
+    // Считываем вторую последовательность
+    if (!std::getline(std::cin, line2))
+    {
+        // Если второй строки нет, пересечение пустое (согласно Sample 2)
+        return 0;
+    }
+
+    const std::set<int> set1 = parse_line_to_set(line1);
+    const std::set<int> set2 = parse_line_to_set(line2);
+
+    /********** Intersection Logic **********/
+    bool is_first = true;
+
+    // Итерируемся по первому множеству и проверяем наличие элемента во втором
+    for (const int value : set1)
+    {
+        if (set2.contains(value))
         {
-            numbers.push_front(value);
-            last_it = numbers.begin();
-            first = false;
-        }
-        else
-        {
-            last_it = numbers.insert_after(last_it, value);
+            if (!is_first)
+            {
+                std::cout << " ";
+            }
+            std::cout << value;
+            is_first = false;
         }
     }
 
-    int val;
-    std::cin >> val;
-
-    // Удаляем все элементы со значением val
-    numbers.remove(val);
-
-    // Проверяем, пуст ли список после удаления
-    if (numbers.empty())
-    {
-        std::cout << "EMPTY\n";
-    }
-    else
-    {
-        // Выводим оставшиеся элементы
-        for (const auto& num : numbers)
-        {
-            std::cout << num << ' ';
-        }
-        std::cout << '\n';
-    }
+    std::cout << std::endl;
 
     return 0;
+}
+
+/********** Function Implementation **********/
+
+/**
+ * @brief Реализация парсинга строки в std::set
+ **/
+std::set<int>
+parse_line_to_set(const std::string& input_line)
+{
+    std::set<int> result_set;
+    std::stringstream ss(input_line);
+    int number{};
+
+    while (ss >> number)
+    {
+        result_set.insert(number);
+    }
+
+    return result_set;
 }

@@ -4,7 +4,7 @@
  * @version 3.3
  * @date 2025-07-07
  *
- * @copyright Copyright (c) 2025
+ * @copyright Copyright (c) 2026 Oleg Sokolov
  ********************************************************************/
 
 #ifndef STYLE_H
@@ -146,11 +146,11 @@ extern "C"
     volatile u32_t g_system_ticks_vu32 = 0; // Volatile global (e.g., SysTick counter)
     f32_t g_battery_voltage_f32;            // Global float (accessible across modules)
     static i16_t s_error_count_i16 = 0;     // Static (file-scoped) counter
-    u8_t *ptr_buffer_u8;                    // Pointer to uint8_t buffer
-    pid_params_t *ptr_pid;                  // Pointer to PID struct
-    volatile i16_t *vptr_sensor_data_i16;   // Pointer to volatile sensor data
+    u8_t* ptr_buffer_u8;                    // Pointer to uint8_t buffer
+    pid_params_t* ptr_pid;                  // Pointer to PID struct
+    volatile i16_t* vptr_sensor_data_i16;   // Pointer to volatile sensor data
     u16_t (*ptr_arr_matrix_u16)[4];         // Pointer to 4-element array of u16_t
-    f32_t &ref_offset_f32 = 1.25f;          // Reference parameter
+    f32_t& ref_offset_f32 = 1.25f;          // Reference parameter
     f32_t arr_waypoints_f32[10];            // Array of waypoint coordinates
 
     /** Loop variables:
@@ -236,7 +236,7 @@ extern "C"
     static const f32_t ROBOT_MAX_SPEED_MMPS = 500.0f; ///< Max speed (mm/s)
 
     // Function `printf()` usage
-    (void)printf("%.2f\n", number); ///< Always add (void) before printf()
+    (void) printf("%.2f\n", number); ///< Always add (void) before printf()
 //==============================================================================
 // Safety and Checks
 //==============================================================================
@@ -250,15 +250,15 @@ extern "C"
     } while (0)
 
 // Alignment check
-#define CHECK_ALIGN(ptr, align)         \
-    do                                  \
-    {                                   \
-        if ((uintptr_t)(ptr) % (align)) \
-            return ERR_ALIGN;           \
+#define CHECK_ALIGN(ptr, align)          \
+    do                                   \
+    {                                    \
+        if ((uintptr_t) (ptr) % (align)) \
+            return ERR_ALIGN;            \
     } while (0)
 
 // Safe volatile access
-#define VOL_ACCESS(addr) (*(volatile typeof(addr) *)&(addr))
+#define VOL_ACCESS(addr) (*(volatile typeof(addr)*) &(addr))
 
 // Value clamping
 #define CLAMP(val, min, max) \
@@ -278,10 +278,10 @@ extern "C"
     } task_prio_t;
 
     /// RTOS task template
-    void task_template(void *params)
+    void task_template(void* params)
     {
         // 1. Initialization
-        (void)params; // Suppress unused warnings
+        (void) params; // Suppress unused warnings
 
         // 2. Main loop
         for (;;)
@@ -350,7 +350,7 @@ extern "C"
      *
      * @warning Do not call before PWM initialization!
      */
-    err_code_t motor_init(const motor_cfg_t *cfg, motor_handle_t *handle)
+    err_code_t motor_init(const motor_cfg_t* cfg, motor_handle_t* handle)
     {
         CHECK_NULL(cfg);
         CHECK_NULL(handle);
