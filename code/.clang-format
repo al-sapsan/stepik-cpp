@@ -1,27 +1,49 @@
 BasedOnStyle: LLVM
 
+# Indentation
 IndentWidth: 4
 TabWidth: 4
 UseTab: Never
 
+# Braces
 BreakBeforeBraces: Allman
 
+# One-line rules (safety first)
 AllowShortFunctionsOnASingleLine: None
 AllowShortBlocksOnASingleLine: false
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
 
+# Line length (embedded-friendly)
 ColumnLimit: 0
 
+# Spacing
 SpacesBeforeTrailingComments: 1
 SpaceAfterCStyleCast: true
 SpaceBeforeParens: ControlStatements
 SpaceInEmptyParentheses: false
 SpaceBeforeRangeBasedForLoopColon: true
 
+# Indentation details
 IndentCaseLabels: true
 IndentGotoLabels: true
+IndentExternBlock: AfterExternBlock
 
-Cpp11BracedListStyle: false
+# Pointer / reference alignment
 DerivePointerAlignment: false
 PointerAlignment: Left
+ReferenceAlignment: Left
+
+# Braced init lists
+Cpp11BracedListStyle: false
+
+# Includes (do NOT reorder or regroup)
+SortIncludes: false
+IncludeBlocks: Preserve
+
+# Switch formatting
+AllowShortCaseLabelsOnASingleLine: false
+
+# Comments
+ReflowComments: false
+

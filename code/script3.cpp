@@ -1,116 +1,77 @@
-/**********************************************************************
- * @file word_analyzer.cpp
- * @brief Инструмент для анализа частоты слов с сохранением порядка появления.
+/************************************************************************
+ * @file word_freq.cpp
+ * @brief Программа для подсчета частоты слов с сортировкой (Modern C++20)
+ * * @note Сложность: O(N log N) для сортировки, где N — количество слов.
  *
- * Поддерживаемые платформы: ARM Cortex-M, RISC-V, Xtensa (ESP32), RP2040
- *
- * @version 3.4
- * @date 2025-12-19
- *
+ * @version 1.0
+ * @date 2023-10-27
  * @copyright Copyright (c) 2025
- **********************************************************************/
+ *************************************************************************/
 
-/********** Core **********/
+/********** includes **********/
+#include <algorithm>
 #include <iostream>
+#include <map>
+#include <ranges>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
-/************ Class Prototypes ***********/
-
-// == < Class TextFrequencyAnalyzer > == //
-/**
- * @brief Класс для анализа текста и подсчета частоты слов.
- *
- * Сохраняет порядок первого появления слов для корректного вывода отчета.
- */
-class TextFrequencyAnalyzer
-{
-  private:
-    /** @brief Список слов в порядке их первого появления в тексте */
-    std::vector<std::string> m_insertion_order_arr;
-
-    /** @brief Хеш-карта для хранения частоты встречаемости слов */
-    std::unordered_map<std::string, size_t> m_frequency_map;
-
-  public:
-    /**
-     * @brief Конструктор по умолчанию.
-     */
-    TextFrequencyAnalyzer() = default;
-
-    /**
-     * @brief Обрабатывает поток ввода и анализирует слова.
-     * @param[in] ref_input_stream Ссылка на поток ввода.
-     */
-    void ProcessStream(std::istream& ref_input_stream)
-    {
-        std::string current_word;
-
-        // Считываем слова, разделенные пробелами
-        while (ref_input_stream >> current_word)
-        {
-            this->AddWord(current_word);
-        }
-    }
-
-    /**
-     * @brief Выводит отчет о частоте слов в консоль.
-     */
-    void PrintReport() const
-    {
-        // Используем size_t для индексации вектора согласно конвенции
-        for (size_t i = 0; i < m_insertion_order_arr.size(); ++i)
-        {
-            const std::string& ref_word = m_insertion_order_arr[i];
-
-            // Получаем частоту из карты. Использование .at() гарантирует const-safety.
-            size_t count = m_frequency_map.at(ref_word);
-
-            std::cout << ref_word << " " << count << "\n";
-        }
-    }
-
-  private:
-    /**
-     * @brief Добавляет слово в структуры данных.
-     * @param[in] ref_word Строка с новым словом.
-     */
-    void AddWord(const std::string& ref_word)
-    {
-        // Проверяем, встречалось ли слово ранее
-        if (m_frequency_map.find(ref_word) == m_frequency_map.end())
-        {
-            // Новое слово: запоминаем порядок появления
-            m_insertion_order_arr.push_back(ref_word);
-            m_frequency_map[ref_word] = 1;
-        }
-        else
-        {
-            // Существующее слово: инкрементируем счетчик
-            m_frequency_map[ref_word]++;
-        }
-    }
-};
+/********** Typedefs **********/
+typedef uint32_t u32_t;
 
 /********** Main Function **********/
 /**
- * @brief Точка входа в программу.
- * @return Код завершения (0 — успешно).
- */
+ * @brief Точка входа в программу
+ * * Читает количество слов N, затем N слов. Подсчитывает частоту
+ * вхождения каждого слова, сортирует их по убыванию частоты
+ * (при равенстве — по алфавиту) и выводит результат.
+ * * @return Код завершения
+ **/
 int main(void)
 {
-    // Оптимизация стандартных потоков ввода-вывода
+    // Отключаем синхронизацию для ускорения ввода-вывода
     std::ios_base::sync_with_stdio(false);
     std::cin.tie(NULL);
 
-    TextFrequencyAnalyzer analyzer;
+    u32_t count_u32 = 0;
+    if (!(std::cin >> count_u32))
+    {
+        return 0;
+    }
 
-    // 1. Сбор и обработка данных
-    analyzer.ProcessStream(std::cin);
+    // Используем std::map для автоматической сортировки по алфавиту при вставке
+    std::map<std::string, u32_t> word_map;
 
-    // 2. Вывод результатов в требуемом формате
-    analyzer.PrintReport();
+    for (size_t i = 0; i < count_u32; ++i)
+    {
+        std::string temp_word_s;
+        if (std::cin >> temp_word_s)
+        {
+            word_map[temp_word_s]++;
+        }
+    }
+
+    // Переносим данные в вектор для кастомной сортировки
+    std::vector<std::pair<std::string, u32_t>> sorted_words_v(word_map.begin(), word_map.end());
+
+    /**
+     * Лямбда-компаратор:
+     * 1. Сначала сравниваем частоты (по убыванию)
+     * 2. Если частоты равны, сравниваем строки (по возрастанию/алфавиту)
+     */
+    std::ranges::sort(sorted_words_v, [](const auto& lhs, const auto& rhs)
+                      {
+                          if (lhs.second != rhs.second)
+                          {
+                              return lhs.second > rhs.second; // Частота по убыванию
+                          }
+                          return lhs.first < rhs.first; // Алфавит по возрастанию
+                      });
+
+    for (const auto& [word, freq] : sorted_words_v)
+    {
+        std::cout << word << " " << freq << "\n";
+    }
 
     return 0;
 }

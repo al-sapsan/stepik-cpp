@@ -1,118 +1,82 @@
-/*******************************************************************************
- * @file    unique_words.cpp
- * @brief   Программа для нахождения слов, встречающихся только в одном из двух текстов
+/************************************************************************
+ * @file script1.cpp
+ * @brief Программа для поиска незавершивших турнир участников
+ * @note Имена участников выводятся в порядке их регистрации.
+ * @warning Имена чувствительны к регистру.
  *
  * @version 1.1
- * @date    2025-12-17
+ * @date 2023-10-27
  * @copyright Copyright (c) 2025
- ******************************************************************************/
+ *************************************************************************/
 
-/********** Includes **********/
-#include <algorithm>
+/********** Core **********/
 #include <iostream>
-#include <set>
-#include <sstream>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
-/********** Function Prototypes **********/
-
-/**
- * @brief Разбивает строку на множество уникальных слов
- *
- * @param[in] text Входная строка
- * @return Множество уникальных слов
- */
-std::set<std::string>
-split_text_to_set(const std::string& text);
-
-/**
- * @brief Находит симметрическую разность двух множеств слов
- *
- * @param[in] words_left  Первое множество
- * @param[in] words_right Второе множество
- * @return Вектор слов, встречающихся только в одном из текстов (отсортирован)
- */
-std::vector<std::string>
-find_symmetric_difference(const std::set<std::string>& words_left,
-                          const std::set<std::string>& words_right);
-
 /********** Main Function **********/
-
 /**
  * @brief Точка входа в программу
- *
- * @return Код завершения (0 — успех)
- */
-int main(void)
+ * @return Код завершения (0 — успешно)
+ **/
+int main()
 {
-    std::string text_left;
-    std::string text_right;
+    // Оптимизация стандартного ввода-вывода
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(nullptr);
 
-    std::getline(std::cin, text_left);
-    std::getline(std::cin, text_right);
-
-    const std::set<std::string> words_left = split_text_to_set(text_left);
-    const std::set<std::string> words_right = split_text_to_set(text_right);
-
-    const std::vector<std::string> unique_words =
-        find_symmetric_difference(words_left, words_right);
-
-    if (unique_words.empty())
+    /********** 1. Обработка зарегистрированных участников **********/
+    size_t n_registered{ 0 };
+    if (!(std::cin >> n_registered))
     {
-        std::cout << "NO\n";
+        return 0;
     }
-    else
+
+    // Храним порядок регистрации в vector
+    std::vector<std::string> registered_order;
+    registered_order.reserve(n_registered);
+
+    for (size_t i = 0; i < n_registered; ++i)
     {
-        for (const std::string& word : unique_words)
+        std::string name;
+        std::cin >> name;
+        registered_order.push_back(std::move(name));
+    }
+
+    /********** 2. Обработка финишировавших участников **********/
+    size_t m_finished{ 0 };
+    if (!(std::cin >> m_finished))
+    {
+        // Если никто не финишировал, все зарегистрированные — прогульщики ))
+        for (const auto& name : registered_order)
         {
-            std::cout << word << " ";
+            std::cout << name << "\n";
         }
-        std::cout << "\n";
+        return 0;
+    }
+
+    // Используем unordered_set для проверки наличия имени за O(1)
+    std::unordered_set<std::string> finished_names;
+    finished_names.reserve(m_finished);
+
+    for (size_t i = 0; i < m_finished; ++i)
+    {
+        std::string name;
+        std::cin >> name;
+        finished_names.insert(std::move(name));
+    }
+
+    /********** 3. Поиск и вывод отсутствующих **********/
+    // Проходим по вектору зарегистрированных, чтобы сохранить исходный порядок
+    for (const auto& name : registered_order)
+    {
+        // В C++20 используем .contains() для проверки наличия элемента в set
+        if (!finished_names.contains(name))
+        {
+            std::cout << name << "\n";
+        }
     }
 
     return 0;
-}
-
-/********** Function Implementation **********/
-
-std::set<std::string>
-split_text_to_set(const std::string& text)
-{
-    std::set<std::string> words;
-    std::istringstream stream(text);
-    std::string token;
-
-    while (stream >> token)
-    {
-        words.insert(token);
-    }
-
-    return words;
-}
-
-std::vector<std::string>
-find_symmetric_difference(const std::set<std::string>& words_left,
-                          const std::set<std::string>& words_right)
-{
-    std::vector<std::string> result;
-
-    for (const std::string& word : words_left)
-    {
-        if (words_right.find(word) == words_right.end())
-        {
-            result.push_back(word);
-        }
-    }
-
-    for (const std::string& word : words_right)
-    {
-        if (words_left.find(word) == words_left.end())
-        {
-            result.push_back(word);
-        }
-    }
-
-    std::sort(result.begin(), result.end());
-    return result;
 }

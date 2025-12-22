@@ -1,1 +1,1 @@
-dog cat dog cat dog mouse
+10 10 10 10 10
