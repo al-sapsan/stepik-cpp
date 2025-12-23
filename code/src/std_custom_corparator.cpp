@@ -64,7 +64,7 @@ int main()
 {
     // Оптимизация ввода-вывода
     std::ios_base::sync_with_stdio(false);
-    std::cin.tie(nullptr);
+    std::cin.tie(nullptr); // Use nullptr instead of NULL
 
     size_t n;
     if (!(std::cin >> n))
@@ -79,14 +79,14 @@ int main()
         i64_t x, y, val;
         if (!(std::cin >> x >> y >> val))
             return 0;
-        points.emplace_back(Point{ x, y, val });
+        points.emplace_back(Point{ x, y, val }); // Explicit constructor call
     }
 
     /********** Sorting **********/
     std::sort(points.begin(), points.end());
 
     /********** Output **********/
-    for (const auto& p : points)
+    for (const auto& p : points) // Simplified structured binding
     {
         std::cout << p.x << " " << p.y << " " << p.value << "\n";
     }

@@ -1,19 +1,45 @@
 /************************************************************************
  * @file script1.cpp
- * @brief Программа для поиска незавершивших турнир участников
- * @note Имена участников выводятся в порядке их регистрации.
- * @warning Имена чувствительны к регистру.
+ * @brief Программа для сортировки списка участников соревнований
+ * @details Участники сортируются по убыванию очков, а при равенстве — 
+ * лексикографически по имени.
  *
- * @version 1.1
- * @date 2023-10-27
- * @copyright Copyright (c) 2025
+ * @version 1.0
+ * @date 
+ * @copyright Copyright (c) 2025 Oleg Sokolov
  *************************************************************************/
 
 /********** Core **********/
 #include <iostream>
 #include <string>
-#include <unordered_set>
 #include <vector>
+#include <algorithm>
+
+/************ Structure Definition ***********/
+
+/**
+ * @brief Класс, представляющий участника соревнования
+ */
+struct Participant
+{
+    std::string name; ///< Имя участника
+    int score;        ///< Количество набранных очков
+
+    /**
+     * @brief Оператор сравнения для выполнения условий задачи
+     * @details Сортировка: score (desc), then name (asc)
+     * @param other Другой участник для сравнения
+     * @return true если текущий участник должен стоять выше (в контексте std::greater)
+     */
+    [[nodiscard]] bool operator>(const Participant& other) const noexcept
+    {
+        if (score != other.score)
+        {
+            return score > other.score;
+        }
+        return name < other.name;
+    }
+};
 
 /********** Main Function **********/
 /**
@@ -22,60 +48,35 @@
  **/
 int main()
 {
-    // Оптимизация стандартного ввода-вывода
+    // Оптимизация потоков ввода-вывода
     std::ios_base::sync_with_stdio(false);
     std::cin.tie(nullptr);
 
-    /********** 1. Обработка зарегистрированных участников **********/
-    size_t n_registered{ 0 };
-    if (!(std::cin >> n_registered))
+    size_t count = 0;
+    if (!(std::cin >> count))
     {
         return 0;
     }
 
-    // Храним порядок регистрации в vector
-    std::vector<std::string> registered_order;
-    registered_order.reserve(n_registered);
+    std::vector<Participant> participants;
+    participants.reserve(count);
 
-    for (size_t i = 0; i < n_registered; ++i)
+    for (size_t i = 0; i < count; ++i)
     {
         std::string name;
-        std::cin >> name;
-        registered_order.push_back(std::move(name));
-    }
-
-    /********** 2. Обработка финишировавших участников **********/
-    size_t m_finished{ 0 };
-    if (!(std::cin >> m_finished))
-    {
-        // Если никто не финишировал, все зарегистрированные — прогульщики ))
-        for (const auto& name : registered_order)
+        int score = 0;
+        if (std::cin >> name >> score)
         {
-            std::cout << name << "\n";
+            participants.push_back({ std::move(name), score });
         }
-        return 0;
     }
 
-    // Используем unordered_set для проверки наличия имени за O(1)
-    std::unordered_set<std::string> finished_names;
-    finished_names.reserve(m_finished);
+    // Применяем std::greater, который вызывает перегруженный operator>
+    std::ranges::sort(participants, std::greater<Participant>{});
 
-    for (size_t i = 0; i < m_finished; ++i)
+    for (const auto& [name, score] : participants)
     {
-        std::string name;
-        std::cin >> name;
-        finished_names.insert(std::move(name));
-    }
-
-    /********** 3. Поиск и вывод отсутствующих **********/
-    // Проходим по вектору зарегистрированных, чтобы сохранить исходный порядок
-    for (const auto& name : registered_order)
-    {
-        // В C++20 используем .contains() для проверки наличия элемента в set
-        if (!finished_names.contains(name))
-        {
-            std::cout << name << "\n";
-        }
+        std::cout << name << " " << score << "\n";
     }
 
     return 0;
