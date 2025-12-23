@@ -1,72 +1,78 @@
-/**********************************************************************
+/************************************************************************
  * @file script9.cpp
- * @brief Нахождение минимальной разности в подмассиве длины K.
+ * @brief Анализатор журнала посещений сайта (подсчет уникальных страниц)
+ * @note Программа использует std::set для фильтрации дубликатов страниц
+ * и std::map для хранения данных пользователей.
  *
- * @details Программа считывает массив целых чисел и число K,
- * затем находит минимальную разность между максимальным и минимальным
- * элементами среди всех подмассивов длины K.
- *
- * @date 2025-01-01
- * @copyright Copyright (c) 2025
- **********************************************************************/
+ * @version 1.0
+ * @date 
+ * @copyright Copyright (c) 2025 Oleg Sokolov
+ *************************************************************************/
 
 /********** Core **********/
-#include <algorithm>
 #include <iostream>
-#include <limits>
-#include <vector>
+#include <string>
+
+/********** STL **********/
+#include <map>
+#include <set>
+
+/********** Typedefs **********/
+typedef uint32_t u32_t;
+typedef std::string str_t;
 
 /********** Main Function **********/
-/**
- * @brief Точка входа программы.
- *
- * @return 0 при успешном выполнении
- */
 int main(void)
 {
-    std::vector<int> arr;
-    int value;
+    /** Отключаем синхронизацию для ускорения ввода-вывода **/
+    std::ios_base::sync_with_stdio(false);
+    std::cin.tie(NULL);
 
-    // Читаем все числа из первой строки
-    while (std::cin >> value)
-    {
-        arr.push_back(value);
-        if (std::cin.peek() == '\n')
-        {
-            break;
-        }
-    }
-
-    int k;
-    std::cin >> k;
-
-    // Проверка корректности входных данных
-    if (arr.empty() || k <= 0 || k > static_cast<int>(arr.size()))
+    u32_t record_count;
+    if (!(std::cin >> record_count))
     {
         return 0;
     }
 
-    int min_difference = std::numeric_limits<int>::max();
-
-    // Перебираем все подмассивы длины k
-    for (size_t i = 0; i <= arr.size() - k; ++i)
+    /** * Хранилище: ID пользователя -> Множество уникальных страниц.
+     * std::map автоматически сортирует ключи (ID) по возрастанию.
+     * std::set гарантирует уникальность названий страниц.
+     */
+    std::map<u32_t, std::set<str_t>> user_history;
+    for (size_t i = 0; i < record_count; ++i)
     {
-        // Находим максимум и минимум в текущем подмассиве
-        int max_val = arr[i];
-        int min_val = arr[i];
+        u32_t user_id;
+        str_t page_name;
 
-        for (int j = 1; j < k; ++j)
+        if (std::cin >> user_id >> page_name)
         {
-            max_val = std::max(max_val, arr[i + j]);
-            min_val = std::min(min_val, arr[i + j]);
+            /** * Если ключа user_id нет в map, он будет создан.
+             * Затем в set этого пользователя вставляется название страницы.
+             */
+            user_history[user_id].insert(page_name);
         }
-
-        // Вычисляем разность и обновляем минимум
-        int difference = max_val - min_val;
-        min_difference = std::min(min_difference, difference);
     }
 
-    std::cout << min_difference << '\n';
+    size_t max_unique_count = 0;
+    /** Находим максимальное количество уникальных страниц среди всех пользователей */
+    for (const auto& [id, pages] : user_history)
+    {
+        if (pages.size() > max_unique_count)
+        {
+            max_unique_count = pages.size();
+        }
+    }
+
+    /** * Итерируемся по map. Так как map отсортирован по ID, 
+     * вывод будет соответствовать условию задачи (по возрастанию ID).
+     */
+    for (const auto& [id, pages] : user_history)
+    {
+        if (pages.size() == max_unique_count)
+        {
+            std::cout << id << "\n";
+        }
+    }
 
     return 0;
 }
