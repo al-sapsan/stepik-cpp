@@ -1,7 +1,8 @@
-6
-1 home
-2 home
-1 about
-2 about
-3 contact
-3 home
+7
+02:30 Aeroflot 101
+04:05 S7 305
+12:33 S7 204
+08:15 Aeroflot 102
+10:45 Emirates 1
+22:15 Pobeda 122
+08:15 Pobeda 112

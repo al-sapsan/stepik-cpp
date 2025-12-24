@@ -17,9 +17,8 @@
 using u32_t = uint32_t;
 using i32_t = int32_t;
 
-/************ Class Prototypes ***********/
+/************ Class Definition ***********/
 
-// == < Class Participant > == //
 /**
  * @brief Класс, представляющий участника турнира
  */

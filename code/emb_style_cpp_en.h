@@ -1,143 +1,156 @@
-/**********************************************************************
- * @file emb_style_cpp.h
+// ===========================================================================
+ * @file emb_style_cpp_en.h
  * @brief Coding style for Embedded C++ (bare-metal/RTOS/robotics)
  *
  * Supported platforms: ARM Cortex-M, RISC-V, Xtensa (ESP32), RP2040
  *
  * @version 3.3
  * @date 2025-07-07
- * @copyright Copyright (c) 2026 Oleg Sokolov
- **********************************************************************/
+ * @copyright Copyright (c) 2026 Oleg Sokolov. All rights reserved.
+ // ============================================================================
 
 #ifndef EMB_STYLE_CPP_H
 #define EMB_STYLE_CPP_H
 
 #ifdef __cplusplus
 extern "C"
-{
+ {
 #endif
 
-    //==============================================================================
-    //  Code Structure
-    //==============================================================================
+     //==============================================================================
+     //  Code Structure
+     //==============================================================================
 
-    /************************************************************************
-     * 1. General Information (filename, purpose, platform, version, date)
-     * Example:
-        * @file motor_control.c
-        * @brief Motor control driver (PID controller)
-        * @version 1.1 (STM32F4xx HAL)
-        * @date 2023-08-15
-        *
-        * @warning Do not use with DMA without buffer checks!
-        * @note Maximum update rate: 1 kHz
-    *************************************************************************
+     // 1. General Information, File Header (filename, purpose, platform, version, date)
+     // Example:
+
+     /************************************************************************
+     * @file motor_control.c
+     * @brief Motor control driver (PID controller)
+     * @warning Do not use with DMA without buffer checks!
+     * @note Maximum update rate: 1 kHz
+     *
+     * @version 1.1 (STM32F4xx HAL)
+     * @date 2023-08-15
+     * @copyright Copyright (c) 2026 Oleg Sokolov. All rights reserved.
+     *************************************************************************/
 
      // 2. Libraries used (grouped by purpose)
-     * Example:
-        /********** Core **********/
+     // Example:
+
+     /********** Core **********/
 #include <stdint.h>
 #include "stm32f4xx_hal.h"
 
-/********** Drivers **********/
+     /********** Drivers **********/
 #include "encoder.h"
 #include "pwm.h"
 
-/********** RTOS **********/
+     /********** RTOS **********/
 #include "FreeRTOS.h"
 #include "task.h"
 
-    // 3. Data types
-    /* Example:
-       /********** Typedefs **********/
-    typedef int16_t i16_t;
-    typedef uint32_t u32_t;
+     // 3. Data types
+     /* Example:
+	
+/********** Typedefs **********/
+     typedef int16_t i16_t;
+     typedef uint32_t u32_t;
 
-    // 4. Constants
-    /* Example:
-       /********** Constants **********/
-    constexpr u16_t MAX_BUFFER_SIZE = 128;
-    constexpr u32_t TIMEOUT_MS_DEFAULT = 1000;
-    constexpr f32_t PI_CONST = 3.1415926f;
+     // 4. Constants
+     /* Example:
+	
+/********** Constants **********/
+     constexpr u16_t MAX_BUFFER_SIZE = 128;
+     constexpr u32_t TIMEOUT_MS_DEFAULT = 1000;
+     constexpr f32_t PI_CONST = 3.1415926f;
 
-    // 5. Function prototypes with Doxygen comments
-    /* Example:
-       /********** Function Prototypes ********** /
+     // 5. Function prototypes with Doxygen comments
+     /* Example:
+	
+/********** Function Prototypes ********** /
+
     * @brief Initialize PID controller
     * @param pid Pointer to the structure(must be valid)
     * @param kp Proportional coefficient[0.0 - 5.0]
     * @ return HAL_StatusTypeDef Initialization status**/
-    HAL_StatusTypeDef
-    pid_init(pid_controller_t* pid, float kp);
+     HAL_StatusTypeDef
+     pid_init(pid_controller_t * pid, float kp);
 
-    // 6. Main function
-    /* Example:
-        /********** Main Function ********** /
+     // 6. Main function
+     /* Example:
+	
+/********** Main Function ********** /
+	
     * @brief Точка входа в программу *
     * @ return Код завершения(0 — успешно, 1 — ошибка памяти)
     **/
-    int main(void) {
-        ...
-    };
+     int main(void) {
+         ...
+     };
 
-    // 7. Function implementations
-    *Example :
-        /********** Function Implementation **********/
-        void
-        funct() {
-            ...
-        };
-    // 8. Section headers use the following notation:
-    /* Example common section headers:
-       /********** Header Text **********/
-    /* Example for the class naming
-      // == < Class Name > == //
+     // 7. Function implementations
+     /*Example:
+
+/********** Function Implementation **********/
+     void funct() {
+         ...
+     };
+
+     // 8. Section headers use the following notation:
+     /* Example common section headers:
+
+/********** Header Text **********/
+
+     /* Example for the class naming
+
+// == < Class Name > == //
 
    /* Big example for the class naming
 
-   /************ Class Prototypes ***********/
+/************ Class Prototypes ***********/
 
-    // == < Class Sensor > == //
-    class Sensor
-    {
-      protected:
-        uint8_t pin;   // Пин подключения
-        bool isActive; // Состояние активности
-      public:
-        // Конструктор
-        Sensor(uint8_t p) : pin(p), isActive(false)
-        {
-        }
-        // Виртуальный метод для инициализации
-        virtual void init() = 0;
-        // Метод активации датчика
-        void activate()
-        {
-            isActive = true;
-        }
-        // Метод деактивации датчика
-        void deactivate()
-        {
-            isActive = false;
-        }
-    };
-    // == < Class TemperatureSensor > == //
-    class TemperatureSensor : public Sensor
-    {
-      private:
-        float temperature; // Текущее значение температуры
-      public:
-        // Конструктор
-        TemperatureSensor(uint8_t p) : Sensor(p)
-        {
-        }
-    };
+     // == < Class Sensor > == //
+     class Sensor
+     {
+       protected:
+         uint8_t pin;   // Пин подключения
+         bool isActive; // Состояние активности
+       public:
+         // Конструктор
+         Sensor(uint8_t p) : pin(p), isActive(false)
+         {
+         }
+         // Виртуальный метод для инициализации
+         virtual void init() = 0;
+         // Метод активации датчика
+         void activate()
+         {
+             isActive = true;
+         }
+         // Метод деактивации датчика
+         void deactivate()
+         {
+             isActive = false;
+         }
+     };
+     // == < Class TemperatureSensor > == //
+     class TemperatureSensor : public Sensor
+     {
+       private:
+         float temperature; // Текущее значение температуры
+       public:
+         // Конструктор
+         TemperatureSensor(uint8_t p) : Sensor(p)
+         {
+         }
+     };
 
-    //==============================================================================
-    // Doxygen Documentation
-    //==============================================================================
+     //==============================================================================
+     // Doxygen Documentation
+     //==============================================================================
 
-    /**
+     /**
      * @brief Brief module/function description
      *
      * Detailed functionality description. Example:
@@ -153,12 +166,13 @@ extern "C"
      * @warning Safety warnings
      * @see Related functions
      */
-    // Doxygen comments must be in Russian, but the section header in English
-    //==============================================================================
-    // Variable Naming Conventions
-    //==============================================================================
+     // Doxygen comments must be in Russian, but the section header in English
 
-    /*
+     //==============================================================================
+     // Variable Naming Conventions
+     //==============================================================================
+
+     /*
      * Format:
      * [scope][description]_[type][unit]
      *
@@ -187,62 +201,62 @@ extern "C"
      *   _vu32   -> volatile u32_t
      *   _au32   -> atomic_uint
      */
-    // Example:
-    volatile u32_t g_system_ticks_vu32 = 0; // Volatile global (e.g., SysTick counter)
-    f32_t g_battery_voltage_f32;            // Global float (accessible across modules)
-    static i16_t s_error_count_i16 = 0;     // Static (file-scoped) counter
-    u8_t* ptr_buffer_u8;                    // Pointer to uint8_t buffer
-    pid_params_t* ptr_pid;                  // Pointer to PID struct
-    volatile i16_t* vptr_sensor_data_i16;   // Pointer to volatile sensor data
-    u16_t (*ptr_arr_matrix_u16)[4];         // Pointer to 4-element array of u16_t
-    f32_t& ref_offset_f32 = 1.25f;          // Reference parameter
-    f32_t arr_waypoints_f32[10];            // Array of waypoint coordinates
+     // Example:
+     volatile u32_t g_system_ticks_vu32 = 0; // Volatile global (e.g., SysTick counter)
+     f32_t g_battery_voltage_f32;            // Global float (accessible across modules)
+     static i16_t s_error_count_i16 = 0;     // Static (file-scoped) counter
+     u8_t* ptr_buffer_u8;                    // Pointer to uint8_t buffer
+     pid_params_t* ptr_pid;                  // Pointer to PID struct
+     volatile i16_t* vptr_sensor_data_i16;   // Pointer to volatile sensor data
+     u16_t(*ptr_arr_matrix_u16)[4];          // Pointer to 4-element array of u16_t
+     f32_t& ref_offset_f32 = 1.25f;          // Reference parameter
+     f32_t arr_waypoints_f32[10];            // Array of waypoint coordinates
 
-    /** Loop variables:
+     /** Loop variables:
      *  i, j, k  -> simple loops
      *  row, col -> matrix/array loops
      *  full names -> other cases
      */
-    // Example:
-    for (size_t i = 0; i < 10; i++)
-    { // Standard loop index
-        arr_waypoints_f32[i] = 0.0f;
-    }
+     // Example:
+     for (size_t i = 0; i < 10; i++)
+     { // Standard loop index
+         arr_waypoints_f32[i] = 0.0f;
+     }
 
-    for (size_t row = 0; row < 4; row++)
-    { // Multi-Dimensional Loops
-        for (size_t col = 0; col < 4; col++)
-        {
-            matrix[row][col] = 0;
-        }
-    }
+     for (size_t row = 0; row < 4; row++)
+     { // Multi-Dimensional Loops
+         for (size_t col = 0; col < 4; col++)
+         {
+             matrix[row][col] = 0;
+         }
+     }
 
-    //==============================================================================
-    //  Data Types
-    //==============================================================================
+     //==============================================================================
+     //  Data Types
+     //==============================================================================
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
 
-    // Base types
-    typedef uint8_t u8_t;   ///< Unsigned 8-bit integer   [0, 255]
-    typedef int8_t i8_t;    ///< Signed 8-bit integer     [-128, 127]
-    typedef uint16_t u16_t; ///< Unsigned 16-bit integer  [0, 65_535]
-    typedef int16_t i16_t;  ///< Signed 16-bit integer    [-32_768, 32_767]
-    typedef uint32_t u32_t; ///< Unsigned 32-bit integer  [0, 4_294_967_295]
-    typedef int32_t i32_t;  ///< Signed 32-bit integer    [-2_147_483_648, 2_147_483_647]
-    typedef float f32_t;    ///< 32-bit float             [~±1.18e−38, ±3.4e+38] (approx)
-    typedef double f64_t;   ///< 64-bit double            [~±2.23e−308, ±1.79e+308] (approx)
-    typedef bool b_t;       ///< Boolean                  [false, true]
+     // Base types
+     typedef uint8_t u8_t;   ///< Unsigned 8-bit integer   [0, 255]
+     typedef int8_t i8_t;    ///< Signed 8-bit integer     [-128, 127]
+     typedef uint16_t u16_t; ///< Unsigned 16-bit integer  [0, 65_535]
+     typedef int16_t i16_t;  ///< Signed 16-bit integer    [-32_768, 32_767]
+     typedef uint32_t u32_t; ///< Unsigned 32-bit integer  [0, 4_294_967_295]
+     typedef int32_t i32_t;  ///< Signed 32-bit integer    [-2_147_483_648, 2_147_483_647]
+     typedef float f32_t;    ///< 32-bit float             [~±1.18e−38, ±3.4e+38] (approx)
+     typedef double f64_t;   ///< 64-bit double            [~±2.23e−308, ±1.79e+308] (approx)
+     typedef bool b_t;       ///< Boolean                  [false, true]
 
-    // Volatile versions for register access
-    typedef volatile uint8_t vu8_t;
-    typedef volatile uint16_t vu16_t;
-    typedef volatile uint32_t vu32_t;
-    typedef volatile int32_t vi32_t;
+     // Volatile versions for register access
+     typedef volatile uint8_t vu8_t;
+     typedef volatile uint16_t vu16_t;
+     typedef volatile uint32_t vu32_t;
+     typedef volatile int32_t vi32_t;
 
-    /** ✅ Use size_t for
+     /** ✅ Use size_t for
     - Sizes
     - Lengths
     - Counts
@@ -254,154 +268,156 @@ extern "C"
     - Loop counters that go backwards
     -Protocol-defined fields
     */
-    //==============================================================================
-    //  Constants (prefer constexpr)
-    //==============================================================================
 
-    constexpr u16_t MAX_BUFFER_SIZE = 128; // Instead of #define
-    constexpr u32_t TIMEOUT_MS_DEFAULT = 1000;
-    constexpr f32_t PI_CONST = 3.1415926f;
-    constexpr f32_t DEG_TO_RAD = 0.0174533f;
+     //==============================================================================
+     //  Constants (prefer constexpr)
+     //==============================================================================
 
-    //==============================================================================
-    //  Robotics: Specialized Types
-    //==============================================================================
+     constexpr u16_t MAX_BUFFER_SIZE = 128; // Instead of #define
+     constexpr u32_t TIMEOUT_MS_DEFAULT = 1000;
+     constexpr f32_t PI_CONST = 3.1415926f;
+     constexpr f32_t DEG_TO_RAD = 0.0174533f;
 
-    /// 2D coordinates (mm)
-    typedef struct
-    {
-        f32_t x_mm;
-        f32_t y_mm;
-    } coord_2d_t;
+     //==============================================================================
+     //  Robotics: Specialized Types
+     //==============================================================================
 
-    /// 3D coordinates (mm)
-    typedef struct
-    {
-        f32_t x_mm;
-        f32_t y_mm;
-        f32_t z_mm;
-    } coord_3d_t;
+     /// 2D coordinates (mm)
+     typedef struct
+     {
+         f32_t x_mm;
+         f32_t y_mm;
+     } coord_2d_t;
 
-    /// Euler angles (degrees and radians)
-    typedef struct
-    {
-        f32_t roll_deg;
-        f32_t pitch_deg;
-        f32_t yaw_deg;
-    } euler_angles_t;
+     /// 3D coordinates (mm)
+     typedef struct
+     {
+         f32_t x_mm;
+         f32_t y_mm;
+         f32_t z_mm;
+     } coord_3d_t;
 
-    /// Motor parameters
-    typedef struct
-    {
-        f32_t rpm_target;
-        f32_t current_limit_A;
-        u8_t pwm_duty;
-    } motor_params_t;
+     /// Euler angles (degrees and radians)
+     typedef struct
+     {
+         f32_t roll_deg;
+         f32_t pitch_deg;
+         f32_t yaw_deg;
+     } euler_angles_t;
 
-//==============================================================================
-//  Safety: Checks
-//==============================================================================
+     /// Motor parameters
+     typedef struct
+     {
+         f32_t rpm_target;
+         f32_t current_limit_A;
+         u8_t pwm_duty;
+     } motor_params_t;
 
-// Null pointer check
+     //==============================================================================
+     //  Safety: Checks
+     //==============================================================================
+
+     // Null pointer check
 #define CHECK_NULL(ptr)    \
-    do                     \
-    {                      \
-        if ((ptr) == NULL) \
-        {                  \
-            return;        \
-        }                  \
-    } while (0)
+     do                     \
+     {                      \
+         if ((ptr) == NULL) \
+         {                  \
+             return;        \
+         }                  \
+     } while (0)
 
-// Range check
+     // Range check
 #define CHECK_RANGE(val, min, max)          \
-    do                                      \
-    {                                       \
-        if ((val) < (min) || (val) > (max)) \
-        {                                   \
-            return;                         \
-        }                                   \
-    } while (0)
+     do                                      \
+     {                                       \
+         if ((val) < (min) || (val) > (max)) \
+         {                                   \
+             return;                         \
+         }                                   \
+     } while (0)
 
-// Range check with error return
+     // Range check with error return
 #define CHECK_RANGE_ERR(val, min, max, err) \
-    do                                      \
-    {                                       \
-        if ((val) < (min) || (val) > (max)) \
-        {                                   \
-            return (err);                   \
-        }                                   \
-    } while (0)
+     do                                      \
+     {                                       \
+         if ((val) < (min) || (val) > (max)) \
+         {                                   \
+             return (err);                   \
+         }                                   \
+     } while (0)
 
-    //==============================================================================
-    //  RTOS: Tasks and Synchronization
-    //==============================================================================
+     //==============================================================================
+     //  RTOS: Tasks and Synchronization
+     //==============================================================================
 
-    // Recommended stack sizes (in words)
-    constexpr u16_t TASK_STACK_MINIMAL = 128; // Minimal (simple handler)
-    constexpr u16_t TASK_STACK_SMALL = 256;   // Sensors, simple algorithms
-    constexpr u16_t TASK_STACK_MEDIUM = 512;  // Moderate logic
-    constexpr u16_t TASK_STACK_LARGE = 1024;  // Complex algorithms/protocols
-    constexpr u16_t TASK_STACK_HUGE = 2048;   // Computer vision, etc.
+     // Recommended stack sizes (in words)
+     constexpr u16_t TASK_STACK_MINIMAL = 128; // Minimal (simple handler)
+     constexpr u16_t TASK_STACK_SMALL = 256;   // Sensors, simple algorithms
+     constexpr u16_t TASK_STACK_MEDIUM = 512;  // Moderate logic
+     constexpr u16_t TASK_STACK_LARGE = 1024;  // Complex algorithms/protocols
+     constexpr u16_t TASK_STACK_HUGE = 2048;   // Computer vision, etc.
 
-    /// RTOS task template
-    void task_template(void* pvParameters)
-    {
-        // Initialization
-        (void) pvParameters; // Explicit unused warning suppression
+     /// RTOS task template
+     void task_template(void* pvParameters)
+     {
+         // Initialization
+         (void) pvParameters; // Explicit unused warning suppression
 
-        // Main task loop
-        for (;;) // Prefer over while(1)
-        {
-            // Main task logic
+         // Main task loop
+         for (;;) // Prefer over while(1)
+         {
+             // Main task logic
 
-            // Delay or wait for event
-            vTaskDelay(pdMS_TO_TICKS(10));
-        }
+             // Delay or wait for event
+             vTaskDelay(pdMS_TO_TICKS(10));
+         }
 
-        // Should never reach here
-        vTaskDelete(NULL);
-    }
+         // Should never reach here
+         vTaskDelete(NULL);
+     }
 
-    //==============================================================================
-    //  Example Structures (Extended)
-    //==============================================================================
+     //==============================================================================
+     //  Example Structures (Extended)
+     //==============================================================================
 
-    typedef struct
-    {
-        coord_3d_t m_position;
-        euler_angles_t m_orientation;
-        motor_params_t m_motors[4];
-        u32_t m_update_time_ms;
-    } robot_state_t;
+     typedef struct
+     {
+         coord_3d_t m_position;
+         euler_angles_t m_orientation;
+         motor_params_t m_motors[4];
+         u32_t m_update_time_ms;
+     } robot_state_t;
 
-    /// @brief UART configuration
-    typedef struct
-    {
-        u32_t m_baud_rate_u32;
-        u8_t m_data_bits_u8;
-        u8_t m_stop_bits_u8;
-        b_t m_parity_enable_b;
-    } uart_cfg_t;
+     /// @brief UART configuration
+     typedef struct
+     {
+         u32_t m_baud_rate_u32;
+         u8_t m_data_bits_u8;
+         u8_t m_stop_bits_u8;
+         b_t m_parity_enable_b;
+     } uart_cfg_t;
 
-    /// @brief Example sensor structure
-    typedef struct
-    {
-        f32_t m_temperature_f32_C;
-        u16_t m_adc_value_u16;
-        b_t m_active_b;
-    } sensor_t;
+     /// @brief Example sensor structure
+     typedef struct
+     {
+         f32_t m_temperature_f32_C;
+         u16_t m_adc_value_u16;
+         b_t m_active_b;
+     } sensor_t;
 
-    /// @brief Example global variables
-    extern u8_t g_device_id_u8;
-    extern b_t g_data_ready_b;
+     /// @brief Example global variables
+     extern u8_t g_device_id_u8;
+     extern b_t g_data_ready_b;
 
-    /// @brief Example static variable
-    static u8_t s_rx_buffer_u8[MAX_BUFFER_SIZE];
+     /// @brief Example static variable
+     static u8_t s_rx_buffer_u8[MAX_BUFFER_SIZE];
 
-    //==============================================================================
-    //  Interrupts (ISR)
-    //==============================================================================
-    /*
+     //==============================================================================
+     //  Interrupts (ISR)
+     //==============================================================================
+
+     /*
      * - Use _isr prefix
      * - Minimal logic
      * - No dynamic memory
@@ -409,46 +425,48 @@ extern "C"
      * - May use __attribute__((interrupt)) if needed
      */
 
-    // Example:
-    void exti0_isr(void);
+     // Example:
+     void exti0_isr(void);
 
-    //==============================================================================
-    //  RTOS Conventions
-    //==============================================================================
-    /*
+     //==============================================================================
+     //  RTOS Conventions
+     //==============================================================================
+
+     /*
      * - enum class State_t : u8_t {} for FSMs
      * - Prefixes: task_, sem_, evt_, msg_, etc.
      * - volatile and atomic for synchronization
      */
 
-    //==============================================================================
-    //  Namespaces
-    //==============================================================================
+     //==============================================================================
+     //  Namespaces
+     //==============================================================================
 
-    namespace hal
-    {
-    void gpio_write(u8_t pin, b_t value);
-    b_t gpio_read(u8_t pin);
-    } // namespace hal
+     namespace hal
+     {
+     void gpio_write(u8_t pin, b_t value);
+     b_t gpio_read(u8_t pin);
+     } // namespace hal
 
-    namespace ctrl
-    {
-    typedef struct
-    {
-        f32_t m_kp_f32;
-        f32_t m_ki_f32;
-        f32_t m_kd_f32;
-        f32_t m_error_f32;
-    } pid_t;
+     namespace ctrl
+     {
+     typedef struct
+     {
+         f32_t m_kp_f32;
+         f32_t m_ki_f32;
+         f32_t m_kd_f32;
+         f32_t m_error_f32;
+     } pid_t;
 
-    void pid_reset(pid_t* ptr_pid);
-    f32_t pid_compute(pid_t* ptr_pid, f32_t l_input_f32, f32_t l_target_f32);
-    } // namespace ctrl
+     void pid_reset(pid_t* ptr_pid);
+     f32_t pid_compute(pid_t* ptr_pid, f32_t l_input_f32, f32_t l_target_f32);
+     } // namespace ctrl
 
-//==============================================================================
-//  Banned in Embedded C++ (Do Not Use)
-//==============================================================================
-/*
+     //==============================================================================
+     //  Banned in Embedded C++ (Do Not Use)
+     //==============================================================================
+
+     /*
  * - std::shared_ptr, std::unique_ptr
  * - std::vector, std::string
  * - new/delete
@@ -456,20 +474,21 @@ extern "C"
  * - RTTI (Run-Time Type Info)
  */
 
-//==============================================================================
-//  Example Safety Macro
-//==============================================================================
+     //==============================================================================
+     //  Example Safety Macro
+     //==============================================================================
+
 #define CHECK_NULL(ptr)    \
-    do                     \
-    {                      \
-        if ((ptr) == NULL) \
-        {                  \
-            return;        \
-        }                  \
-    } while (0)
+     do                     \
+     {                      \
+         if ((ptr) == NULL) \
+         {                  \
+             return;        \
+         }                  \
+     } while (0)
 
 #ifdef __cplusplus
-} // extern "C"
+ } // extern "C"
 #endif
 
 #endif /* EMB_STYLE_CPP_H */

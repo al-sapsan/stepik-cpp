@@ -51,9 +51,11 @@ int main()
         return 0;
     }
 
+    // Резервируем память для вектора рейсов
     std::vector<Flight> flights;
     flights.reserve(n);
 
+    // Чтение данных
     for (size_t i = 0; i < n; ++i)
     {
         Flight f;
@@ -61,8 +63,10 @@ int main()
         flights.push_back(std::move(f));
     }
 
+    // Сортировка с использованием std::sort и оператора <=>
     std::sort(flights.begin(), flights.end());
 
+    // Вывод результатов
     for (const auto& [time, company, number] : flights)
     {
         std::cout << time << " " << company << " " << number << "\n";
