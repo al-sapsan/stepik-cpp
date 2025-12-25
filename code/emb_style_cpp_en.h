@@ -4,8 +4,8 @@
  *
  * Supported platforms: ARM Cortex-M, RISC-V, Xtensa (ESP32), RP2040
  *
- * @version 3.3
- * @date 2025-07-07
+ * @version 3.4
+ * @date 21-12-2026
  * @copyright Copyright (c) 2026 Oleg Sokolov. All rights reserved.
  // ============================================================================
 
@@ -30,8 +30,8 @@ extern "C"
      * @warning Do not use with DMA without buffer checks!
      * @note Maximum update rate: 1 kHz
      *
-     * @version 1.1 (STM32F4xx HAL)
-     * @date 2023-08-15
+     * @version 1.0 (STM32F4xx HAL)
+     * @date 12-12-2026
      * @copyright Copyright (c) 2026 Oleg Sokolov. All rights reserved.
      *************************************************************************/
 
@@ -262,6 +262,7 @@ extern "C"
     - Counts
     - Indexes tied to size
     -Memory-related values
+
         ❌ Avoid size_t for
     - Error codes
     - Signed math

@@ -1,83 +1,77 @@
 /************************************************************************
  * @file script1.cpp
- * @brief Программа для сортировки списка участников соревнований
- * @details Участники сортируются по убыванию очков, а при равенстве — 
- * лексикографически по имени.
+ * @brief Обработка строк (удаление цифр и ближайших букв слева)
  *
- * @version 1.0
+ * @version 1.2
  * @date 
- * @copyright Copyright (c) 2025 Oleg Sokolov
+ * @copyright Copyright (c) 2025 Oleg Sokolov. All rights reserved
  *************************************************************************/
 
 /********** Core **********/
 #include <iostream>
 #include <string>
-#include <vector>
-#include <algorithm>
+#include <cctype>
 
-/************ Structure Definition ***********/
+/********** Function Prototypes **********/
 
 /**
- * @brief Класс, представляющий участника соревнования
- */
-struct Participant
-{
-    std::string name; ///< Имя участника
-    int score;        ///< Количество набранных очков
-
-    /**
-     * @brief Оператор сравнения для выполнения условий задачи
-     * @details Сортировка: score (desc), then name (asc)
-     * @param other Другой участник для сравнения
-     * @return true если текущий участник должен стоять выше (в контексте std::greater)
-     */
-    [[nodiscard]] bool operator>(const Participant& other) const noexcept
-    {
-        if (score != other.score)
-        {
-            return score > other.score;
-        }
-        return name < other.name;
-    }
-};
+ * @brief Обрабатывает строку согласно правилам задачи
+ * * @param[in] s Входная строка
+ * @return std::string Обработанная строка
+ **/
+[[nodiscard]] std::string
+process_string(const std::string& s);
 
 /********** Main Function **********/
+
 /**
- * @brief Точка входа в программу
- * @return Код завершения (0 — успешно)
+ * @brief Точка входа
+ * @return Код завершения
  **/
 int main()
 {
-    // Оптимизация потоков ввода-вывода
-    std::ios_base::sync_with_stdio(false);
-    std::cin.tie(nullptr);
+    std::string input;
 
-    size_t count = 0;
-    if (!(std::cin >> count))
+    // Чтение строк до конца потока ввода
+    while (std::cin >> input)
     {
-        return 0;
-    }
-
-    std::vector<Participant> participants;
-    participants.reserve(count);
-
-    for (size_t i = 0; i < count; ++i)
-    {
-        std::string name;
-        int score = 0;
-        if (std::cin >> name >> score)
-        {
-            participants.push_back({ std::move(name), score });
-        }
-    }
-
-    // Применяем std::greater, который вызывает перегруженный operator>
-    std::ranges::sort(participants, std::greater<Participant>{});
-
-    for (const auto& [name, score] : participants)
-    {
-        std::cout << name << " " << score << "\n";
+        if (input == "exit")
+            break;
+        std::cout << process_string(input) << std::endl;
     }
 
     return 0;
+}
+
+/********** Function Implementation **********/
+
+[[nodiscard]] std::string
+process_string(const std::string& s)
+{
+    std::string result;
+    result.reserve(s.size());
+
+    for (const char ch : s)
+    {
+        const auto u_ch = static_cast<unsigned char>(ch);
+
+        if (std::isdigit(u_ch))
+        {
+            // Если есть символ слева и это не цифра — удаляем его (pop_back)
+            if (!result.empty() && !std::isdigit(static_cast<unsigned char>(result.back())))
+            {
+                result.pop_back();
+            }
+            else
+            {
+                result.push_back(ch);
+            }
+        }
+        else
+        {
+            result.push_back(ch);
+        }
+    }
+
+    return result;
 }

@@ -43,13 +43,18 @@ int main(void)
 {
     std::string input_line;
 
+    // Считываем всю строку целиком
     if (!std::getline(std::cin, input_line) || input_line.empty())
     {
         return 0;
     }
 
+    // 1. Заполняем стек словами (порядок добавления: первое слово внизу)
     auto words_stack = fill_stack_with_words(input_line);
+
+    // 2. Извлекаем слова (порядок извлечения: последнее слово первым) и выводим
     std::cout << build_string_from_stack(words_stack) << std::endl;
+
     return 0;
 }
 
