@@ -1,1 +1,6 @@
-Привет
+5
+add TaskA 1
+add TaskB 3
+add TaskC 2
+empty
+process
